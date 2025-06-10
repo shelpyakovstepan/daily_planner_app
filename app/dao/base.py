@@ -10,8 +10,8 @@ class BaseDao:
     async def add(cls, **values):
         async with async_session_maker() as session:
             query = insert(cls.model).values(**values)
-            session.execute(query)
-            session.commit()
+            await session.execute(query)
+            await session.commit()
 
     @classmethod
     async def find_by_id(cls, model_id):
@@ -41,5 +41,5 @@ class BaseDao:
     async def delete(cls, **values):
         async with async_session_maker() as session:
             query = delete(cls.model).filter_by(**values)
-            session.execute(query)
-            session.commit()
+            await session.execute(query)
+            await session.commit()
