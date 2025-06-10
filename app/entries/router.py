@@ -27,3 +27,7 @@ async def add_entry(
     if not entry:
         raise NotAddEntryException
     return entry
+
+@router.delete("/{entry_id}")
+async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
+    await EntriesDAO.delete(id=entry_id, user_id=user.id)
