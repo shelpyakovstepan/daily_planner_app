@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends
 
 from app.entries.dao import EntriesDAO
 from app.entries.schemas import SEntries
-from app.exceptions import NotAddEntryException, NotTrueTimeException, YouDoNotHaveEntriesException
+from app.exceptions import NotAddEntryException, NotTrueTimeException, YouDoNotHaveEntriesException, \
+    YouDoNotHaveEntryException
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 
@@ -36,6 +37,14 @@ async def get_entries(user: Users = Depends(get_current_user)) -> List[SEntries]
         raise YouDoNotHaveEntriesException
 
     return entries
+
+@router.get("/entry_id/")
+async def get_entry_by_id(entry_id: int, user: Users = Depends(get_current_user)) -> SEntries:
+    entry = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
+    if not entry:
+        raise YouDoNotHaveEntryException
+
+    return entry
 
 @router.delete("/{entry_id}")
 async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):

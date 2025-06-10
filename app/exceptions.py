@@ -45,4 +45,9 @@ class NotTrueTimeException(BaseAppException):
     detail="Not true time"
 
 class YouDoNotHaveEntriesException(BaseAppException):
-   detail = "You don't have any entries"
+    status_code=status.HTTP_409_CONFLICT
+    detail = "You don't have any entries"
+
+class YouDoNotHaveEntryException(BaseAppException):
+    status_code=status.HTTP_409_CONFLICT
+    detail = "You don't have entry for this id"
