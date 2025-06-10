@@ -1,8 +1,7 @@
 from datetime import datetime, UTC
 
-import jwt
 from fastapi import Request, Depends
-from jose import JWTError
+from jose import JWTError, jwt
 
 from app.config import settings
 from app.exceptions import TokenAbsentException, IncorrectTokenFormatException, TokenExpiredException, \

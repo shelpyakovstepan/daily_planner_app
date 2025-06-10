@@ -30,3 +30,8 @@ async def login(response: Response, user_data: SUsersAuth):
     response.set_cookie("access_token", access_token, httponly=True)
 
     return {"access_token": access_token}
+
+
+@router.post("/logout")
+def logout_user(response: Response):
+    response.delete_cookie("access_token")

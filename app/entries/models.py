@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, Integer, ForeignKey, Date, Text, Enum
+from sqlalchemy import Column, Integer, ForeignKey, Date, Text
 from sqlalchemy.dialects import postgresql
 
 from app.database import Base
@@ -9,6 +9,7 @@ class StatusEnum(enum.Enum):
     WORK = 1
     READY = 2
     EXPIRED = 3
+    WAITING = 4
 
 class Entries(Base):
     __tablename__ = 'entries'
