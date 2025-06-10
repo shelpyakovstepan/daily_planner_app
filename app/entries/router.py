@@ -1,10 +1,11 @@
 from datetime import date, datetime, UTC
+from typing import List
 
 from fastapi import APIRouter, Depends
 
 from app.entries.dao import EntriesDAO
 from app.entries.schemas import SEntries
-from app.exceptions import NotAddEntryException, NotTrueTimeException
+from app.exceptions import NotAddEntryException, NotTrueTimeException, YouDoNotHaveEntriesException
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 
@@ -13,7 +14,7 @@ router = APIRouter(
     tags=["Записи"]
 )
 
-@router.post("")
+@router.post("/")
 async def add_entry(
         date_start: date, date_end: date, text: str,
         user: Users = Depends(get_current_user)
@@ -27,6 +28,14 @@ async def add_entry(
     if not entry:
         raise NotAddEntryException
     return entry
+
+@router.get("")
+async def get_entries(user: Users = Depends(get_current_user)) -> List[SEntries]:
+    entries = await EntriesDAO.find_all(user_id=user.id)
+    if not entries:
+        raise YouDoNotHaveEntriesException
+
+    return entries
 
 @router.delete("/{entry_id}")
 async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):

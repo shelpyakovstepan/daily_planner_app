@@ -43,3 +43,6 @@ class NotAddEntryException(BaseAppException):
 class NotTrueTimeException(BaseAppException):
     status_code=status.HTTP_400_BAD_REQUEST
     detail="Not true time"
+
+class YouDoNotHaveEntriesException(BaseAppException):
+   detail = "You don't have any entries"
