@@ -55,3 +55,7 @@ class YouDoNotHaveEntryException(BaseAppException):
 class TextIsTooBigException(BaseAppException):
     status_code=status.HTTP_400_BAD_REQUEST
     detail="Text too big"
+
+class NotUpdateEntryException(BaseAppException):
+    status_code=status.HTTP_409_CONFLICT
+    detail="Not updating entry"

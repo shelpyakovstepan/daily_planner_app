@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends
 from app.entries.dao import EntriesDAO
 from app.entries.schemas import SEntries
 from app.exceptions import NotAddEntryException, NotTrueTimeException, YouDoNotHaveEntriesException, \
-    YouDoNotHaveEntryException, TextIsTooBigException
+    YouDoNotHaveEntryException, TextIsTooBigException, NotUpdateEntryException
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 
@@ -70,8 +70,11 @@ async def update_entry(
     if not entry_update:
         raise YouDoNotHaveEntryException
 
-    await EntriesDAO.update(entry_id, date_start=date_start, date_end=date_end, text=text)
+    entry = await EntriesDAO.update(entry_id, date_start=date_start, date_end=date_end, text=text)
+    if not entry:
+        raise NotUpdateEntryException
 
+    return entry
 
 @router.delete("/{entry_id}")
 async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
