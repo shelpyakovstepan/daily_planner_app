@@ -22,7 +22,7 @@ async def add_entry(
 ) -> SEntries:
 
     delta = date_end - date_start
-    if delta.days < 0 or datetime.now(UTC).timestamp() > datetime.strptime(str(date_end), "%Y-%m-%d").timestamp():
+    if delta.days <= 0 or datetime.now(UTC).timestamp() > datetime.strptime(str(date_end), "%Y-%m-%d").timestamp():
         raise NotTrueTimeException
 
     if len(text) > 1000:
@@ -79,7 +79,7 @@ async def update_entry(
 @router.patch("///")
 async def update_entry_status(
         entry_id: int,
-        status: Literal["WORK", "READY"],
+        status: Literal["WORK", "READY", "WAITING"],
         user: Users = Depends(get_current_user)
 ) -> SEntries:
 
@@ -93,3 +93,8 @@ async def update_entry_status(
 @router.delete("/{entry_id}")
 async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
     await EntriesDAO.delete(id=entry_id, user_id=user.id)
+
+
+@router.get("////")
+async def global_update_statuses():
+    await EntriesDAO.global_update_statuses()

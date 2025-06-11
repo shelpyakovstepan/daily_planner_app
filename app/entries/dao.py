@@ -1,10 +1,10 @@
 from datetime import date, datetime, UTC
 
-from sqlalchemy import insert, update
-
+from sqlalchemy import insert, update, select, or_
 from app.dao.base import BaseDao
 from app.database import async_session_maker
-from app.entries.models import Entries
+from app.entries.models import Entries, StatusEnum
+
 
 class EntriesDAO(BaseDao):
     model = Entries
@@ -63,3 +63,32 @@ class EntriesDAO(BaseDao):
             await session.commit()
 
             return update_entry.scalar()
+
+    @classmethod
+    async def global_update_statuses(cls):
+        async with async_session_maker() as session:
+            all_entries_with_work_or_waiting_statuses = select(Entries).where(
+                or_(
+                Entries.status == StatusEnum.WAITING,
+                Entries.status == StatusEnum.WORK
+            ))
+
+            all_entries_with_work_or_waiting_statuses = await session.execute(all_entries_with_work_or_waiting_statuses)
+            all_entries_with_work_or_waiting_statuses = all_entries_with_work_or_waiting_statuses.scalars().all()
+
+            for entry in all_entries_with_work_or_waiting_statuses:
+                if entry.status == StatusEnum.WAITING and datetime.strptime(str(entry.date_start), "%Y-%m-%d").timestamp() <= datetime.now(UTC).timestamp():
+                    update_entry = update(Entries).where(Entries.id == entry.id).values(
+                        status="WORK"
+                    )
+
+                    await session.execute(update_entry)
+
+                if entry.status == StatusEnum.WORK and datetime.strptime(str(entry.date_end), "%Y-%m-%d").timestamp() < datetime.now(UTC).timestamp():
+                    update_entry = update(Entries).where(Entries.id == entry.id).values(
+                        status="EXPIRED"
+                    )
+
+                    await session.execute(update_entry)
+
+            await session.commit()
