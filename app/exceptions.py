@@ -51,3 +51,7 @@ class YouDoNotHaveEntriesException(BaseAppException):
 class YouDoNotHaveEntryException(BaseAppException):
     status_code=status.HTTP_409_CONFLICT
     detail = "You don't have entry for this id"
+
+class TextIsTooBigException(BaseAppException):
+    status_code=status.HTTP_400_BAD_REQUEST
+    detail="Text too big"

@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends
 from app.entries.dao import EntriesDAO
 from app.entries.schemas import SEntries
 from app.exceptions import NotAddEntryException, NotTrueTimeException, YouDoNotHaveEntriesException, \
-    YouDoNotHaveEntryException
+    YouDoNotHaveEntryException, TextIsTooBigException
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 
@@ -20,9 +20,13 @@ async def add_entry(
         date_start: date, date_end: date, text: str,
         user: Users = Depends(get_current_user)
 ) -> SEntries:
+
     delta = date_end - date_start
     if delta.days < 0 or datetime.now(UTC).timestamp() > datetime.strptime(str(date_end), "%Y-%m-%d").timestamp():
         raise NotTrueTimeException
+
+    if len(text) > 1000:
+        raise TextIsTooBigException
 
     entry = await EntriesDAO.add_entry(user.id, date_start, date_end, text)
 
