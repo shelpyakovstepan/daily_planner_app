@@ -28,7 +28,7 @@ async def add_entry(
     if len(text) > 1000:
         raise TextIsTooBigException
 
-    entry = await EntriesDAO.add_entry(user.id, date_start, date_end, text)
+    entry = await EntriesDAO.add(user.id, date_start, date_end, text)
 
     if not entry:
         raise NotAddEntryException
@@ -49,6 +49,22 @@ async def get_entry_by_id(entry_id: int, user: Users = Depends(get_current_user)
         raise YouDoNotHaveEntryException
 
     return entry
+
+@router.put("//")
+async def update_entry(
+        entry_id: int,
+        date_start: date,
+        date_end: date,
+        text: str,
+        user: Users = Depends(get_current_user)
+):
+
+    entry_update = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
+    if not entry_update:
+        raise YouDoNotHaveEntryException
+
+    await EntriesDAO.update(entry_id, date_start=date_start, date_end=date_end, text=text)
+
 
 @router.delete("/{entry_id}")
 async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
