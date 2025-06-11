@@ -1,5 +1,5 @@
 from datetime import date, datetime, UTC
-from typing import List
+from typing import List, Literal
 
 from fastapi import APIRouter, Depends
 
@@ -57,7 +57,7 @@ async def update_entry(
         date_end: date,
         text: str,
         user: Users = Depends(get_current_user)
-):
+) -> SEntries:
 
     delta = date_end - date_start
     if delta.days < 0 or datetime.now(UTC).timestamp() > datetime.strptime(str(date_end), "%Y-%m-%d").timestamp():
@@ -75,6 +75,20 @@ async def update_entry(
         raise NotUpdateEntryException
 
     return entry
+
+@router.patch("///")
+async def update_entry_status(
+        entry_id: int,
+        status: Literal["WORK", "READY"],
+        user: Users = Depends(get_current_user)
+) -> SEntries:
+
+    entry_update = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
+    if not entry_update:
+        raise YouDoNotHaveEntryException
+
+    status_update = await EntriesDAO.update_one(entry_id, status=status)
+    return status_update
 
 @router.delete("/{entry_id}")
 async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
