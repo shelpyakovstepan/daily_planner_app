@@ -59,6 +59,13 @@ async def update_entry(
         user: Users = Depends(get_current_user)
 ):
 
+    delta = date_end - date_start
+    if delta.days < 0 or datetime.now(UTC).timestamp() > datetime.strptime(str(date_end), "%Y-%m-%d").timestamp():
+        raise NotTrueTimeException
+
+    if len(text) > 1000:
+        raise TextIsTooBigException
+
     entry_update = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
     if not entry_update:
         raise YouDoNotHaveEntryException
