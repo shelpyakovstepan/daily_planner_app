@@ -7,7 +7,7 @@ from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 from app.users.schemas import SUsersAuth
-from app.tasks.tasks import send_registration_confirmation_email
+from app.tasks.tasks import send_registration_email
 
 router = APIRouter(
     prefix="/auth",
@@ -24,7 +24,7 @@ async def register(user_data: SUsersAuth):
 
     await UserDAO.add(email=user_data.email, hashed_password=hashed_password)
 
-    send_registration_confirmation_email.delay(user_data.email)
+    send_registration_email.delay(user_data.email)
 
 
 @router.post("/login")
