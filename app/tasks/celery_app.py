@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 from kombu import Connection
 
 from app.config import settings
@@ -23,3 +24,20 @@ if check_rabbit_connection():
     )
 else:
     raise RuntimeError("Cannot initialize Celery without RabbitMQ connection")
+
+
+celery.conf.update(
+    timezone='Europe/Moscow',
+    enable_utc=True,
+    worker_hijack_root_logger=False
+)
+
+#celery -A app.tasks.celery_app:celery worker --loglevel=INFO --pool=solo
+#celery -A app.tasks.celery_app:celery beat --loglevel=INFO
+
+celery.conf.beat_schedule = {
+    "gl_update_statuses": {
+        "task": 'app.tasks.tasks.global_update_statuses_task',
+        'schedule': crontab(hour=0, minute=0),
+    }
+}
