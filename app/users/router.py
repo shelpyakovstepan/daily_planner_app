@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Response, Depends
 
 from app.exceptions import UserAlreadyExistsException, IncorrectUserEmailOrPasswordException
 from app.users.auth import get_password_hash, authenticate_user, create_access_token
 from app.users.dao import UserDAO
+from app.users.dependencies import get_current_user
+from app.users.models import Users
 from app.users.schemas import SUsersAuth
 
 router = APIRouter(
@@ -30,6 +32,10 @@ async def login(response: Response, user_data: SUsersAuth):
     response.set_cookie("access_token", access_token, httponly=True)
 
     return {"access_token": access_token}
+
+@router.post("/me")
+async def get_me(user: Users = Depends(get_current_user)):
+    return user
 
 @router.post("/logout")
 def logout_user(response: Response):
