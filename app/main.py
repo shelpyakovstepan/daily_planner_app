@@ -1,4 +1,8 @@
-from fastapi import FastAPI
+import time
+
+from fastapi import FastAPI, Request
+
+from app.logger import logger
 from app.users.router import router as users_router
 from app.entries.router import router as entries_router
 
@@ -6,3 +10,12 @@ app = FastAPI()
 
 app.include_router(users_router)
 app.include_router(entries_router)
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.perf_counter()
+    response = await call_next(request)
+    process_time = time.perf_counter() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    logger.info(f"Request handling time: {round(process_time, 4)}")
+    return response
