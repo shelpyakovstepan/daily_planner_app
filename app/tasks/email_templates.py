@@ -5,7 +5,7 @@ from pydantic import EmailStr
 from app.config import settings
 
 
-def create_registration_confirmation_email(
+def create_registration_email(
         email_to: EmailStr
 ):
     email = EmailMessage()
