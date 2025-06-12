@@ -1,12 +1,19 @@
 import time
+from contextlib import asynccontextmanager, contextmanager
+from typing import AsyncIterator
 
 from fastapi import FastAPI, Request
 
+from app.database import check_db_connection
 from app.logger import logger
 from app.users.router import router as users_router
 from app.entries.router import router as entries_router
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    await check_db_connection()
+    yield
+app = FastAPI(lifespan=lifespan)
 
 app.include_router(users_router)
 app.include_router(entries_router)

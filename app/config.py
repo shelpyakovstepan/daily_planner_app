@@ -13,6 +13,16 @@ class Settings(BaseSettings):
     DB_PASS: str
     DB_NAME: str
 
+    RABBIT_USER: str
+    RABBIT_PASS: str
+    RABBIT_HOST: str
+    RABBIT_PORT: int
+
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_USER: str
+    SMTP_PASS: str
+
     SECRET_KEY: str
     ALGORITHM: str
 
