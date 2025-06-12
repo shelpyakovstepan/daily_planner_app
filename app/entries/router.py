@@ -50,6 +50,14 @@ async def get_entry_by_id(entry_id: int, user: Users = Depends(get_current_user)
 
     return entry
 
+@router.get("/status")
+async def get_entries_by_status(status: Literal["WAITING", "WORK", "READY", "EXPIRED"], user: Users = Depends(get_current_user)) -> List[SEntries]:
+    entries = await EntriesDAO.find_all(status=status, user_id=user.id)
+
+    if not entries:
+        raise YouDoNotHaveEntryException
+    return entries
+
 @router.put("//")
 async def update_entry(
         entry_id: int,
@@ -95,6 +103,6 @@ async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
     await EntriesDAO.delete(id=entry_id, user_id=user.id)
 
 
-@router.get("////")
+@router.patch("////")
 async def global_update_statuses():
     await EntriesDAO.global_update_statuses()
