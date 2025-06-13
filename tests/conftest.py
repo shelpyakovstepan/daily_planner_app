@@ -55,3 +55,13 @@ async def authenticated_ac():
         })
         assert ac.cookies["access_token"]
         yield ac
+
+@pytest.fixture(scope="session")
+async def authenticated_ac_admin():
+    async with AsyncClient(base_url="http://test", transport=httpx.ASGITransport(app=fastapi_app)) as ac:
+        await ac.post("/auth/login", json={
+            "email": "step3210shelpyakov@gmail.com",
+            "password": "kolobok"
+        })
+        assert ac.cookies["access_token"]
+        yield ac
