@@ -48,7 +48,7 @@ async def change_admin_status(user_id: int, admin_status: bool, user: Users = De
         raise NotUserException
     return user
 
-@router.post("/me")
+@router.get("/me")
 async def get_me(user: Users = Depends(get_current_user)):
     return user
 
