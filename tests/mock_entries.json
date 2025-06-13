@@ -1,0 +1,51 @@
+[
+  {
+    "user_id": 1,
+    "date_start": "2025-06-18",
+    "date_end": "2025-07-18",
+    "text": "Заметка на месяц, ожидается waiting",
+    "status": "WAITING"
+  },
+  {
+    "user_id": 1,
+    "date_start": "2025-06-18",
+    "date_end": "2025-06-21",
+    "text": "финальное изменение",
+    "status": "WAITING"
+  },
+  {
+    "user_id": 1,
+    "date_start": "2025-06-11",
+    "date_end": "2025-06-12",
+    "text": "Пум пум",
+    "status": "EXPIRED"
+  },
+  {
+    "user_id": 1,
+    "date_start": "2025-06-10",
+    "date_end": "2025-06-20",
+    "text": "Пу",
+    "status": "WORK"
+  },
+  {
+    "user_id": 2,
+    "date_start": "2025-06-10",
+    "date_end": "2025-06-20",
+    "text": "Поменял финальный день",
+    "status": "WORK"
+  },
+  {
+    "user_id": 2,
+    "date_start": "2025-06-09",
+    "date_end": "2025-06-19",
+    "text": "Тестовая заметка",
+    "status": "WORK"
+  },
+  {
+    "user_id": 2,
+    "date_start": "2025-06-09",
+    "date_end": "2025-06-19",
+    "text": "Тестовая заметка",
+    "status": "WORK"
+  }
+]

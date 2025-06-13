@@ -1,0 +1,12 @@
+[
+    {
+      "email": "user@example.com",
+      "hashed_password": "$2b$12$pzW2JBdkHmP8yYdq.m4t0OICxBbSjyTA08dLbSzawG.FWqQiYTdqu",
+      "is_admin": false
+    },
+    {
+      "email": "step3210shelpyakov@gmail.com",
+      "hashed_password": "$2b$12$hTdYOVyjy.GCmFP2ArKncuG5Hg5Vlwh0qovYYNp10VRMc5129FmO6",
+      "is_admin": true
+    }
+]

@@ -1,5 +1,3 @@
-from typing import Literal
-
 from fastapi import APIRouter, Response, Depends
 
 from app.exceptions import UserAlreadyExistsException, IncorrectUserEmailOrPasswordException, NotEnoughRightsException, \
