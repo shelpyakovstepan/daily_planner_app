@@ -1,11 +1,14 @@
+from typing import Literal
+
 from fastapi import APIRouter, Response, Depends
 
-from app.exceptions import UserAlreadyExistsException, IncorrectUserEmailOrPasswordException
+from app.exceptions import UserAlreadyExistsException, IncorrectUserEmailOrPasswordException, NotEnoughRightsException, \
+    NotUserException
 from app.users.auth import get_password_hash, authenticate_user, create_access_token
 from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
 from app.users.models import Users
-from app.users.schemas import SUsersAuth
+from app.users.schemas import SUsersAuth, SUsers
 from app.tasks.tasks import send_registration_email
 
 router = APIRouter(
@@ -36,6 +39,16 @@ async def login(response: Response, user_data: SUsersAuth):
     response.set_cookie("access_token", access_token, httponly=True)
 
     return {"access_token": access_token}
+
+@router.post("/admin")
+async def change_admin_status(user_id: int, admin_status: bool, user: Users = Depends(get_current_user)) -> SUsers:
+    if not user.is_admin:
+        raise NotEnoughRightsException
+
+    user = await UserDAO.update_one(user_id, is_admin=admin_status)
+    if not user:
+        raise NotUserException
+    return user
 
 @router.post("/me")
 async def get_me(user: Users = Depends(get_current_user)):
