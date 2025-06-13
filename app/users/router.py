@@ -24,7 +24,7 @@ async def register(user_data: SUsersAuth):
 
     await UserDAO.add(email=user_data.email, hashed_password=hashed_password)
 
-    send_registration_email.delay(user_data.email)
+    #send_registration_email.delay(user_data.email)
 
 
 @router.post("/login")
@@ -38,7 +38,7 @@ async def login(response: Response, user_data: SUsersAuth):
 
     return {"access_token": access_token}
 
-@router.post("/admin")
+@router.patch("/admin")
 async def change_admin_status(user_id: int, admin_status: bool, user: Users = Depends(get_current_user)) -> SUsers:
     if not user.is_admin:
         raise NotEnoughRightsException
