@@ -42,7 +42,7 @@ async def get_entries(user: Users = Depends(get_current_user)) -> List[SEntries]
 
     return entries
 
-@router.get("/entry_id/")
+@router.get("/{entry_id}/")
 async def get_entry_by_id(entry_id: int, user: Users = Depends(get_current_user)) -> SEntries:
     entry = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
     if not entry:
