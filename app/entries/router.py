@@ -87,7 +87,7 @@ async def update_entry(
 @router.patch("///")
 async def update_entry_status(
         entry_id: int,
-        status: Literal["WORK", "READY", "WAITING"],
+        status: Literal["WORK", "READY"],
         user: Users = Depends(get_current_user)
 ) -> SEntries:
 
