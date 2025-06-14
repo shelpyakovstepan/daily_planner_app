@@ -100,8 +100,11 @@ async def update_entry_status(
 
 @router.delete("/{entry_id}")
 async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
-    await EntriesDAO.delete(id=entry_id, user_id=user.id)
+    entry_delete = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
+    if not entry_delete:
+        raise YouDoNotHaveEntryException
 
+    await EntriesDAO.delete(id=entry_id, user_id=user.id)
 
 @router.patch("////")
 async def global_update_statuses():
