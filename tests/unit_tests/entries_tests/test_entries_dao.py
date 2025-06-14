@@ -6,8 +6,8 @@ from app.entries.dao import EntriesDAO
 
 
 @pytest.mark.parametrize("user_id,date_start,date_end,text", [
-    (1, "2025-06-10",  "2025-06-20", "test"),
-    (2, "2025-06-10",  "2025-06-20", "test")
+    (1, "2025-06-10",  "2100-06-20", "test"),
+    (2, "2025-06-10",  "2100-06-20", "test")
 ])
 async def test_add(user_id, date_start, date_end, text):
     date_start = datetime.strptime(date_start, "%Y-%m-%d").date()
@@ -19,8 +19,8 @@ async def test_add(user_id, date_start, date_end, text):
 
 
 @pytest.mark.parametrize("entry_id,date_start,date_end,text", [
-    (8, "2025-06-11",  "2025-06-21", "test"),
-    (9, "2025-06-10",  "2025-06-20", "test_update")
+    (9, "2025-06-11",  "2100-06-21", "test"),
+    (10, "2025-06-10",  "2100-06-20", "test_update")
 ])
 async def test_update(entry_id, date_start, date_end, text):
     date_start = datetime.strptime(date_start, "%Y-%m-%d").date()
@@ -46,8 +46,8 @@ async def test_update_one(entry_id, status):
 
 
 @pytest.mark.parametrize("entry_id,user_id", [
-    (8, 1),
-    (9, 2)
+    (9, 1),
+    (10, 2)
 ])
 async def test_delete(entry_id, user_id):
     await EntriesDAO.delete(id=entry_id, user_id=user_id)

@@ -1,8 +1,6 @@
 import pytest
 from httpx import AsyncClient
 
-from app.users.auth import authenticate_user
-
 
 @pytest.mark.parametrize("email,password,status_code", [
     ("pes@kot.com", "pesokot", 200),
