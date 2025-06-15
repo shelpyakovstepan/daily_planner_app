@@ -18,9 +18,9 @@ class EntriesDAO(BaseDao):
         text: str
     ):
         async with async_session_maker() as session:
-            if datetime.now(UTC).timestamp() < datetime.strptime(str(date_start), "%Y-%m-%d").timestamp():
+            if datetime.now(UTC).date() < datetime.strptime(str(date_start), "%Y-%m-%d").date():
                 status = "WAITING"
-            elif datetime.now(UTC).timestamp() >= datetime.strptime(str(date_start), "%Y-%m-%d").timestamp():
+            elif datetime.now(UTC).date() >= datetime.strptime(str(date_start), "%Y-%m-%d").date():
                 status = "WORK"
 
 
@@ -47,9 +47,9 @@ class EntriesDAO(BaseDao):
     ):
         async with async_session_maker() as session:
 
-            if datetime.now(UTC).timestamp() < datetime.strptime(str(date_start), "%Y-%m-%d").timestamp():
+            if datetime.now(UTC).date() < datetime.strptime(str(date_start), "%Y-%m-%d").date():
                 status = "WAITING"
-            elif datetime.now(UTC).timestamp() >= datetime.strptime(str(date_start), "%Y-%m-%d").timestamp():
+            elif datetime.now(UTC).date() >= datetime.strptime(str(date_start), "%Y-%m-%d").date():
                 status = "WORK"
 
             update_entry = update(Entries).where(Entries.id==entry_id).values(
@@ -77,14 +77,14 @@ class EntriesDAO(BaseDao):
             all_entries_with_work_or_waiting_statuses = all_entries_with_work_or_waiting_statuses.scalars().all()
 
             for entry in all_entries_with_work_or_waiting_statuses:
-                if entry.status == StatusEnum.WAITING and datetime.strptime(str(entry.date_start), "%Y-%m-%d").timestamp() <= datetime.now(UTC).timestamp():
+                if entry.status == StatusEnum.WAITING and datetime.strptime(str(entry.date_start), "%Y-%m-%d").date() <= datetime.now(UTC).date():
                     update_entry = update(Entries).where(Entries.id == entry.id).values(
                         status="WORK"
                     )
 
                     await session.execute(update_entry)
 
-                if entry.status == StatusEnum.WORK and datetime.strptime(str(entry.date_end), "%Y-%m-%d").timestamp() < datetime.now(UTC).timestamp():
+                if entry.status == StatusEnum.WORK and datetime.strptime(str(entry.date_end), "%Y-%m-%d").date() <= datetime.now(UTC).date():
                     update_entry = update(Entries).where(Entries.id == entry.id).values(
                         status="EXPIRED"
                     )

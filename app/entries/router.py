@@ -22,7 +22,7 @@ async def add_entry(
 ) -> SEntries:
 
     delta = date_end - date_start
-    if delta.days <= 0 or datetime.now(UTC).timestamp() > datetime.strptime(str(date_end), "%Y-%m-%d").timestamp():
+    if delta.days <= 0 or datetime.now(UTC).date() >= datetime.strptime(str(date_end), "%Y-%m-%d").date():
         raise NotTrueTimeException
 
     if len(text) > 1000:
@@ -68,7 +68,7 @@ async def update_entry(
 ) -> SEntries:
 
     delta = date_end - date_start
-    if delta.days < 0 or datetime.now(UTC).timestamp() > datetime.strptime(str(date_end), "%Y-%m-%d").timestamp():
+    if delta.days < 0 or datetime.now(UTC).date() >= datetime.strptime(str(date_end), "%Y-%m-%d").date():
         raise NotTrueTimeException
 
     if len(text) > 1000:
