@@ -24,7 +24,7 @@ async def register(user_data: SUsersAuth):
 
     await UserDAO.add(email=user_data.email, hashed_password=hashed_password)
 
-    #send_registration_email.delay(user_data.email)
+    send_registration_email.delay(user_data.email)
 
 
 @router.post("/login")
