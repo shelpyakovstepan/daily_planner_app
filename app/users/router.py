@@ -2,6 +2,7 @@ from fastapi import APIRouter, Response, Depends
 
 from app.exceptions import UserAlreadyExistsException, IncorrectUserEmailOrPasswordException, NotEnoughRightsException, \
     NotUserException
+from app.logger import logger
 from app.users.auth import get_password_hash, authenticate_user, create_access_token
 from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
@@ -23,6 +24,7 @@ async def register(user_data: SUsersAuth):
     hashed_password = get_password_hash(user_data.password)
 
     await UserDAO.add(email=user_data.email, hashed_password=hashed_password)
+    logger.info("User successfully registered")
 
     send_registration_email.delay(user_data.email)
 
@@ -35,6 +37,8 @@ async def login(response: Response, user_data: SUsersAuth):
 
     access_token = create_access_token({"sub": str(user.id)})
     response.set_cookie("access_token", access_token, httponly=True)
+
+    logger.info("User logged in")
 
     return {"access_token": access_token}
 
@@ -55,3 +59,4 @@ async def get_me(user: Users = Depends(get_current_user)):
 @router.post("/logout")
 def logout_user(response: Response):
     response.delete_cookie("access_token")
+    logger.info("User logged out")

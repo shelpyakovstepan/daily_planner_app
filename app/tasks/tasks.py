@@ -20,11 +20,13 @@ def send_registration_email(
         server.login(settings.SMTP_USER, settings.SMTP_PASS)
         server.send_message(email)
 
+    logger.info("Email sent successfully")
+
 @celery.task
 def global_update_statuses_task():
     async def wrapper():
         await EntriesDAO.global_update_statuses()
-        logger.info("Successfully updated statuses")
+        logger.info("Successfully completed task for update statuses")
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(wrapper())
