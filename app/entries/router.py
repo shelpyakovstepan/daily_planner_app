@@ -1,6 +1,7 @@
-from datetime import date, datetime, UTC
+from datetime import date, datetime
 from typing import List, Literal
 
+import pytz
 from fastapi import APIRouter, Depends
 
 from app.entries.dao import EntriesDAO
@@ -31,7 +32,7 @@ async def add_entry(
     delta = date_end - date_start
     if (
         delta.days <= 0
-        or datetime.now(UTC).date()
+        or datetime.now(pytz.timezone('Europe/Moscow')).date()
         >= datetime.strptime(str(date_end), "%Y-%m-%d").date()
     ):
         raise NotTrueTimeException
@@ -94,7 +95,7 @@ async def update_entry(
     delta = date_end - date_start
     if (
         delta.days < 0
-        or datetime.now(UTC).date()
+        or datetime.now(pytz.timezone('Europe/Moscow')).date()
         >= datetime.strptime(str(date_end), "%Y-%m-%d").date()
     ):
         raise NotTrueTimeException
