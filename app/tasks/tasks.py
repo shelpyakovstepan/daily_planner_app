@@ -1,8 +1,11 @@
+# STDLIB
 import asyncio
 import smtplib
 
+# THIRDPARTY
 from pydantic import EmailStr
 
+# FIRSTPARTY
 from app.config import settings
 from app.entries.dao import EntriesDAO
 from app.logger import logger

@@ -1,5 +1,7 @@
-from sqlalchemy import insert, select, delete, update
+# THIRDPARTY
+from sqlalchemy import delete, insert, select, update
 
+# FIRSTPARTY
 from app.database import async_session_maker
 
 

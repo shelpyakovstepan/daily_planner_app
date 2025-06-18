@@ -1,8 +1,11 @@
+# STDLIB
 import enum
 
-from sqlalchemy import Column, Integer, ForeignKey, Date, Text
+# THIRDPARTY
+from sqlalchemy import Column, Date, ForeignKey, Integer, Text
 from sqlalchemy.dialects import postgresql
 
+# FIRSTPARTY
 from app.database import Base
 
 

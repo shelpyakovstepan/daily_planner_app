@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String, Boolean
+# THIRDPARTY
+from sqlalchemy import Boolean, Column, Integer, String
 
+# FIRSTPARTY
 from app.database import Base
 
 

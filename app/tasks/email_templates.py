@@ -1,7 +1,10 @@
+# STDLIB
 from email.message import EmailMessage
 
+# THIRDPARTY
 from pydantic import EmailStr
 
+# FIRSTPARTY
 from app.config import settings
 
 

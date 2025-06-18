@@ -1,12 +1,15 @@
-from datetime import datetime, UTC
+# STDLIB
+from datetime import UTC, datetime
 
-from fastapi import Request, Depends
+# THIRDPARTY
+from fastapi import Depends, Request
 from jose import JWTError, jwt
 
+# FIRSTPARTY
 from app.config import settings
 from app.exceptions import (
-    TokenAbsentException,
     IncorrectTokenFormatException,
+    TokenAbsentException,
     TokenExpiredException,
     UserIsNotPresentException,
 )

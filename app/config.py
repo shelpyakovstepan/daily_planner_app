@@ -1,6 +1,8 @@
+# STDLIB
 import os
 from typing import Literal
 
+# THIRDPARTY
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

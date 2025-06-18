@@ -1,7 +1,9 @@
-from sqlalchemy import text, NullPool
+# THIRDPARTY
+from sqlalchemy import NullPool, text
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
+# FIRSTPARTY
 from app.config import settings
 from app.logger import logger
 

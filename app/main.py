@@ -1,13 +1,16 @@
-import time
+# STDLIB
 from contextlib import asynccontextmanager
+import time
 from typing import AsyncIterator
 
+# THIRDPARTY
 from fastapi import FastAPI, Request
 
+# FIRSTPARTY
 from app.database import check_db_connection
+from app.entries.router import router as entries_router
 from app.logger import logger
 from app.users.router import router as users_router
-from app.entries.router import router as entries_router
 
 
 @asynccontextmanager

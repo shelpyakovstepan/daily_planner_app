@@ -1,5 +1,7 @@
+# THIRDPARTY
 import pytest
 
+# FIRSTPARTY
 from app.users.dao import UserDAO
 
 

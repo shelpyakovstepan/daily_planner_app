@@ -1,16 +1,19 @@
-import json
+# STDLIB
 from datetime import datetime
+import json
 
+# THIRDPARTY
 import httpx
-import pytest
 from httpx import AsyncClient
+import pytest
 from sqlalchemy import insert
 
+# FIRSTPARTY
 from app.config import settings
 from app.database import Base, async_session_maker, engine
+from app.entries.models import Entries
 from app.main import app as fastapi_app
 from app.users.models import Users
-from app.entries.models import Entries
 
 
 @pytest.fixture(scope="session", autouse=True)

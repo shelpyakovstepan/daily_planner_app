@@ -1,7 +1,10 @@
+# STDLIB
 from datetime import datetime
 
+# THIRDPARTY
 import pytest
 
+# FIRSTPARTY
 from app.entries.dao import EntriesDAO
 
 

@@ -1,7 +1,11 @@
+# STDLIB
 from datetime import date, datetime
 
+# THIRDPARTY
 import pytz
-from sqlalchemy import insert, update, select, or_
+from sqlalchemy import insert, or_, select, update
+
+# FIRSTPARTY
 from app.dao.base import BaseDao
 from app.database import async_session_maker
 from app.entries.models import Entries, StatusEnum

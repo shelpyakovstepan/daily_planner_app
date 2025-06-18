@@ -1,22 +1,24 @@
-from fastapi import APIRouter, Response, Depends
+# THIRDPARTY
+from fastapi import APIRouter, Depends, Response
 
+# FIRSTPARTY
 from app.exceptions import (
-    UserAlreadyExistsException,
     IncorrectUserEmailOrPasswordException,
     NotEnoughRightsException,
     NotUserException,
+    UserAlreadyExistsException,
 )
 from app.logger import logger
+from app.tasks.tasks import send_registration_email
 from app.users.auth import (
-    get_password_hash,
     authenticate_user,
     create_access_token,
+    get_password_hash,
 )
 from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
 from app.users.models import Users
-from app.users.schemas import SUsersAuth, SUsers
-from app.tasks.tasks import send_registration_email
+from app.users.schemas import SUsers, SUsersAuth
 
 router = APIRouter(prefix="/auth", tags=["Аутентификация & Пользователи"])
 

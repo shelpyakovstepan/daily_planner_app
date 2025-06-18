@@ -1,9 +1,12 @@
+# STDLIB
 from datetime import UTC, datetime, timedelta
 
+# THIRDPARTY
 import jwt
 from passlib.context import CryptContext
 from pydantic import EmailStr
 
+# FIRSTPARTY
 from app.config import settings
 from app.users.dao import UserDAO
 
