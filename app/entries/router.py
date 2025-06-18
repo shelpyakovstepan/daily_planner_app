@@ -32,7 +32,7 @@ async def add_entry(
     delta = date_end - date_start
     if (
         delta.days <= 0
-        or datetime.now(pytz.timezone('Europe/Moscow')).date()
+        or datetime.now(pytz.timezone("Europe/Moscow")).date()
         >= datetime.strptime(str(date_end), "%Y-%m-%d").date()
     ):
         raise NotTrueTimeException
@@ -95,7 +95,7 @@ async def update_entry(
     delta = date_end - date_start
     if (
         delta.days < 0
-        or datetime.now(pytz.timezone('Europe/Moscow')).date()
+        or datetime.now(pytz.timezone("Europe/Moscow")).date()
         >= datetime.strptime(str(date_end), "%Y-%m-%d").date()
     ):
         raise NotTrueTimeException

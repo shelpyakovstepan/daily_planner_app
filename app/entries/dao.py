@@ -14,12 +14,12 @@ class EntriesDAO(BaseDao):
     async def add(cls, user_id: int, date_start: date, date_end: date, text: str):
         async with async_session_maker() as session:
             if (
-                datetime.now(pytz.timezone('Europe/Moscow')).date()
+                datetime.now(pytz.timezone("Europe/Moscow")).date()
                 < datetime.strptime(str(date_start), "%Y-%m-%d").date()
             ):
                 status = "WAITING"
             elif (
-                datetime.now(pytz.timezone('Europe/Moscow')).date()
+                datetime.now(pytz.timezone("Europe/Moscow")).date()
                 >= datetime.strptime(str(date_start), "%Y-%m-%d").date()
             ):
                 status = "WORK"
@@ -46,12 +46,12 @@ class EntriesDAO(BaseDao):
         async with async_session_maker() as session:
 
             if (
-                datetime.now(pytz.timezone('Europe/Moscow')).date()
+                datetime.now(pytz.timezone("Europe/Moscow")).date()
                 < datetime.strptime(str(date_start), "%Y-%m-%d").date()
             ):
                 status = "WAITING"
             elif (
-                datetime.now(pytz.timezone('Europe/Moscow')).date()
+                datetime.now(pytz.timezone("Europe/Moscow")).date()
                 >= datetime.strptime(str(date_start), "%Y-%m-%d").date()
             ):
                 status = "WORK"
@@ -94,7 +94,7 @@ class EntriesDAO(BaseDao):
                 if (
                     entry.status == StatusEnum.WAITING
                     and datetime.strptime(str(entry.date_start), "%Y-%m-%d").date()
-                    <= datetime.now(pytz.timezone('Europe/Moscow')).date()
+                    <= datetime.now(pytz.timezone("Europe/Moscow")).date()
                 ):
                     update_entry = (
                         update(Entries)
@@ -107,7 +107,7 @@ class EntriesDAO(BaseDao):
                 if (
                     entry.status == StatusEnum.WORK
                     and datetime.strptime(str(entry.date_end), "%Y-%m-%d").date()
-                    <= datetime.now(pytz.timezone('Europe/Moscow')).date()
+                    <= datetime.now(pytz.timezone("Europe/Moscow")).date()
                 ):
                     update_entry = (
                         update(Entries)
