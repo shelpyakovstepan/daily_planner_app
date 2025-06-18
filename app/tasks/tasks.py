@@ -11,9 +11,7 @@ from app.tasks.email_templates import create_registration_email
 
 
 @celery.task
-def send_registration_email(
-        email_to: EmailStr
-):
+def send_registration_email(email_to: EmailStr):
     email = create_registration_email(email_to)
 
     with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT) as server:
@@ -21,6 +19,7 @@ def send_registration_email(
         server.send_message(email)
 
     logger.info("Email sent successfully")
+
 
 @celery.task
 def global_update_statuses_task():

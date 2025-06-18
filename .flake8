@@ -1,0 +1,25 @@
+[flake8]
+inline-quotes = "
+max-line-length = 79
+max-doc-length = 79
+suppress-none-returning = True
+docstring-convention = google
+ignore = ANN002, ANN003, ANN101, D104, ANN204
+exclude =
+    .git
+    __pycache__
+    .pytest_cache
+    .venv
+    migrations/*
+
+per-file-ignores =
+       tests/*: DALL000
+max-complexity = 10
+
+kwargs-max-positional-arguments = 2
+kwargs-ignore-function-pattern =
+    ^logger.(:?log|debug|info|warning|error|exception|critical)$
+    setattr$
+    delattr$
+    getattr$
+    Path$

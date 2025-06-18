@@ -1,5 +1,5 @@
 import time
-from contextlib import asynccontextmanager, contextmanager
+from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
 from fastapi import FastAPI, Request
@@ -9,14 +9,18 @@ from app.logger import logger
 from app.users.router import router as users_router
 from app.entries.router import router as entries_router
 
+
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     await check_db_connection()
     yield
+
+
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(users_router)
 app.include_router(entries_router)
+
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):

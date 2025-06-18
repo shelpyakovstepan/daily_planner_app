@@ -1,19 +1,25 @@
 from fastapi import APIRouter, Response, Depends
 
-from app.exceptions import UserAlreadyExistsException, IncorrectUserEmailOrPasswordException, NotEnoughRightsException, \
-    NotUserException
+from app.exceptions import (
+    UserAlreadyExistsException,
+    IncorrectUserEmailOrPasswordException,
+    NotEnoughRightsException,
+    NotUserException,
+)
 from app.logger import logger
-from app.users.auth import get_password_hash, authenticate_user, create_access_token
+from app.users.auth import (
+    get_password_hash,
+    authenticate_user,
+    create_access_token,
+)
 from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 from app.users.schemas import SUsersAuth, SUsers
 from app.tasks.tasks import send_registration_email
 
-router = APIRouter(
-    prefix="/auth",
-    tags=["Аутентификация & Пользователи"]
-)
+router = APIRouter(prefix="/auth", tags=["Аутентификация & Пользователи"])
+
 
 @router.post("/register")
 async def register(user_data: SUsersAuth):
@@ -42,8 +48,11 @@ async def login(response: Response, user_data: SUsersAuth):
 
     return {"access_token": access_token}
 
+
 @router.patch("/admin")
-async def change_admin_status(user_id: int, admin_status: bool, user: Users = Depends(get_current_user)) -> SUsers:
+async def change_admin_status(
+    user_id: int, admin_status: bool, user: Users = Depends(get_current_user)
+) -> SUsers:
     if not user.is_admin:
         raise NotEnoughRightsException
 
@@ -52,9 +61,11 @@ async def change_admin_status(user_id: int, admin_status: bool, user: Users = De
         raise NotUserException
     return user
 
+
 @router.get("/me")
 async def get_me(user: Users = Depends(get_current_user)):
     return user
+
 
 @router.post("/logout")
 def logout_user(response: Response):

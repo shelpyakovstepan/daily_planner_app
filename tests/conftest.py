@@ -13,7 +13,7 @@ from app.users.models import Users
 from app.entries.models import Entries
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 async def prepare_database():
     assert settings.MODE == "TEST"
 
@@ -41,27 +41,39 @@ async def prepare_database():
 
         await session.commit()
 
+
 @pytest.fixture(scope="function")
 async def ac():
-    async with AsyncClient(base_url="http://test", transport=httpx.ASGITransport(app=fastapi_app)) as ac:
+    async with AsyncClient(
+        base_url="http://test", transport=httpx.ASGITransport(app=fastapi_app)
+    ) as ac:
         yield ac
+
 
 @pytest.fixture(scope="session")
 async def authenticated_ac():
-    async with AsyncClient(base_url="http://test", transport=httpx.ASGITransport(app=fastapi_app)) as ac:
-        await ac.post("/auth/login", json={
-            "email": "user@example.com",
-            "password": "parol"
-        })
+    async with AsyncClient(
+        base_url="http://test", transport=httpx.ASGITransport(app=fastapi_app)
+    ) as ac:
+        await ac.post(
+            "/auth/login",
+            json={"email": "user@example.com", "password": "parol"},
+        )
         assert ac.cookies["access_token"]
         yield ac
 
+
 @pytest.fixture(scope="session")
 async def authenticated_ac_admin():
-    async with AsyncClient(base_url="http://test", transport=httpx.ASGITransport(app=fastapi_app)) as ac:
-        await ac.post("/auth/login", json={
-            "email": "step3210shelpyakov@gmail.com",
-            "password": "kolobok"
-        })
+    async with AsyncClient(
+        base_url="http://test", transport=httpx.ASGITransport(app=fastapi_app)
+    ) as ac:
+        await ac.post(
+            "/auth/login",
+            json={
+                "email": "step3210shelpyakov@gmail.com",
+                "password": "kolobok",
+            },
+        )
         assert ac.cookies["access_token"]
         yield ac
