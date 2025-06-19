@@ -56,3 +56,5 @@ class BaseDao:
             await session.commit()
 
             return result.scalar()
+
+# pyright: reportArgumentType=false, reportCallIssue=false, reportAttributeAccessIssue=false

@@ -122,3 +122,5 @@ class EntriesDAO(BaseDao):
                     await session.execute(update_entry)
 
             await session.commit()
+
+# pyright: reportPossiblyUnboundVariable=false, reportIncompatibleMethodOverride=false, reportAttributeAccessIssue=false

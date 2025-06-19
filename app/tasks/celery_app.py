@@ -9,8 +9,10 @@ from app.logger import logger
 
 
 def check_rabbit_connection():
-    conn_url = (f"amqp://{settings.RABBIT_USER}:{settings.RABBIT_PASS}@"
-                f"{settings.RABBIT_HOST}:{settings.RABBIT_PORT}/")
+    conn_url = (
+        f"amqp://{settings.RABBIT_USER}:{settings.RABBIT_PASS}@"
+        f"{settings.RABBIT_HOST}:{settings.RABBIT_PORT}/"
+    )
     try:
         with Connection(conn_url) as conn:
             conn.connect()
@@ -25,7 +27,7 @@ if check_rabbit_connection():
     celery = Celery(
         "tasks",
         broker=f"amqp://{settings.RABBIT_USER}:{settings.RABBIT_PASS}@"
-               f"{settings.RABBIT_HOST}:{settings.RABBIT_PORT}/",
+        f"{settings.RABBIT_HOST}:{settings.RABBIT_PORT}/",
         include=["app.tasks.tasks"],
     )
 else:
