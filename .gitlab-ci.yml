@@ -12,10 +12,9 @@ services:
 
 build-job:
   stage: build
-  before_script:
-    - docker run -d --name gitlab-ci-runner --restart always --privileged
   script:
     - docker build .
+    - docker run -d --name gitlab-ci-runner --restart always --privileged
 
 unit-test-job:
   stage: test
