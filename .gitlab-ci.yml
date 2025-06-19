@@ -5,23 +5,23 @@ stages:
   - deploy
   - cleanup
 
-image: docker:20.10.16
-
-services:
-  - docker:20.10.16-dind
+#image: docker:20.10.16
+#
+#services:
+#  - docker:20.10.16-dind
 
 build-job:
   stage: build
   script:
-    - docker build -t daily_planner_image .
+    - docker compose build
 
 unit-test-job:
   stage: test
-  image: daily_planner_image:latest
-  services:
-    - docker:dind
+  #image: daily_planner_image:latest
+  #services:
+  #  - docker:dind
   script:
-    - docker run daily_planner_image pytest -s -v
+    - docker run daily_planner pytest -s -v
 
 lint-test-job:
   stage: linttest
