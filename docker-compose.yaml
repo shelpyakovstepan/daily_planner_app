@@ -30,7 +30,7 @@ services:
       - 15672:15672
 
   daily_planner:
-    image: daily_planner_image
+    image: daily_planner_image:latest
     build:
       context: .
     container_name: daily_planner_app

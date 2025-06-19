@@ -12,24 +12,25 @@ services:
 build-job:
   stage: build
   script:
-    - docker build -t daily-planner-backend-image .
+    - docker build -t daily_planner_image .
 
 unit-test-job:
   stage: test
   script:
-    - docker run --rm daily-planner-backend-image pytest -s -v
+    - docker run daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: test
   script:
     - echo "Проверка форматирования с помощью black..."
-    - docker exec -it daily_planner_app black --config .black --check .
+    - docker exec -it daily_planner_image black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
-    - docker exec -it daily_planner_app pyright .
+    - docker exec -it daily_planner_image pyright .
     - echo  "Запуск flake8..."
-    - docker exec -it daily_planner_app flake8 .
+    - docker exec -it daily_planner_image flake8 .
     - echo "Проверка порядка импортов с помощью isort..."
-    - docker exec -it daily_planner_app isort --check-only .
+    - docker exec -it daily_planner_image isort --check-only .
+    - docker daily_planner_image
 
 deploy-job:
   stage: deploy
