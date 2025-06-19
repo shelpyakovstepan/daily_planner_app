@@ -7,7 +7,7 @@ stages:
 build-job:
   stage: build
   script:
-    - docker build -t daily-planner-backend-image
+    - docker build -t daily-planner-backend-image .
 
 unit-test-job:
   stage: test
