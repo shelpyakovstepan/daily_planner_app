@@ -16,17 +16,24 @@ build-job:
   services:
     - docker:24.0-dind
   script:
-    - docker build -t daily_planner_image:latest .
-    - docker run -d --name gitlab-ci-runner --restart always --privileged daily_planner_image
-    - docker images
+    - docker build -t daily_planner_image .
+    - docker save daily_planner_image > image.tar
+  artifacts:
+    paths:
+      - image.tar
+    expire_in: 1 hour
+
 
 unit-test-job:
   stage: test
   image: docker:24.0
   services:
     - docker:24.0-dind
+  dependencies:
+    - build_image
   script:
-    - docker run daily_planner_image:latest pytest -s -v
+    - docker load < image.tar
+    - docker run daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: linttest
