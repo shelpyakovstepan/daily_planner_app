@@ -12,12 +12,12 @@ services:
 build-job:
   stage: build
   script:
-    - docker build -t daily_planner_image .
+    - docker build -t daily-planner-image .
 
 unit-test-job:
   stage: test
   script:
-    - docker run daily_planner_image pytest -s -v
+    - docker run daily-planner-image pytest -s -v
 
 lint-test-job:
   stage: test
