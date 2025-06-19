@@ -18,7 +18,7 @@ build-job:
 unit-test-job:
   stage: test
   script:
-    - docker run daily_planner pytest -s -v
+    - docker run daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: linttest
