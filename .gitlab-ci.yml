@@ -13,7 +13,7 @@ services:
 build-job:
   stage: build
   script:
-    - docker build -t daily_planner_image .
+    - docker build -t daily_planner_image:latest .
     - docker run -d --name gitlab-ci-runner --restart always --privileged daily_planner_image
     - docker images
 
@@ -23,7 +23,7 @@ unit-test-job:
   services:
     - docker:dind
   script:
-    - docker run daily_planner_image pytest -s -v
+    - docker run daily_planner_image:latest pytest -s -v
 
 lint-test-job:
   stage: linttest
