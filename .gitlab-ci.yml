@@ -15,9 +15,13 @@ build-job:
   script:
     - docker build -t daily_planner_image .
     - docker run -d --name gitlab-ci-runner --restart always --privileged daily_planner_image
+    - docker images
 
 unit-test-job:
   stage: test
+  image: docker:latest
+  services:
+    - docker:dind
   script:
     - docker run daily_planner_image pytest -s -v
 
