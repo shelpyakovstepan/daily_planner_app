@@ -5,10 +5,8 @@ stages:
   - deploy
   - cleanup
 
-#image: docker:20.10.16
-#
-#services:
-#  - docker:20.10.16-dind
+services:
+  - docker:20.10.16-dind
 
 build-job:
   stage: build
