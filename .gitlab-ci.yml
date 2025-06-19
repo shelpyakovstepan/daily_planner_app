@@ -18,9 +18,6 @@ build-job:
 
 unit-test-job:
   stage: test
-  image: daily_planner_image:latest
-  services:
-    - docker:dind
   script:
     - docker run daily_planner_image pytest -s -v
 
