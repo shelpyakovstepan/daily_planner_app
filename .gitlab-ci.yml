@@ -17,19 +17,19 @@ build-job:
 unit-test-job:
   stage: test
   script:
-    - docker run -rm daily-planner-backend-image pytest -s -v
+    - docker run -rm daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: test
   script:
     - echo "Проверка форматирования с помощью black..."
-    - docker exec -it daily-planner-backend-image black --config .black --check .
+    - docker exec -it daily_planner_image black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
-    - docker exec -it daily-planner-backend-image pyright .
+    - docker exec -it daily_planner_image pyright .
     - echo  "Запуск flake8..."
-    - docker exec -it daily-planner-backend-image flake8 .
+    - docker exec -it daily_planner_image flake8 .
     - echo "Проверка порядка импортов с помощью isort..."
-    - docker exec -it daily-planner-backend-image isort --check-only .
+    - docker exec -it daily_planner_image isort --check-only .
 
 deploy-job:
   stage: deploy
@@ -39,5 +39,5 @@ deploy-job:
 cleanup-job:
   stage: cleanup
   script:
-    - docker compose down
+    - docker compose down -d
 
