@@ -5,21 +5,25 @@ stages:
   - deploy
   - cleanup
 
+image: docker:20.10.16
+
 services:
   - docker:20.10.16-dind
 
 build-job:
   stage: build
+  before_script:
+    - docker run -d --name gitlab-ci-runner --restart always --privileged
   script:
-    - docker compose build
+    - docker build .
 
 unit-test-job:
   stage: test
-  #image: daily_planner_image:latest
-  #services:
-  #  - docker:dind
+  image: daily_planner_image:latest
+  services:
+    - docker:dind
   script:
-    - docker run daily_planner pytest -s -v
+    - docker run daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: linttest
