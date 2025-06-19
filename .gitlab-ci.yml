@@ -30,7 +30,7 @@ unit-test-job:
   services:
     - docker:24.0-dind
   dependencies:
-    - build_image
+    - build-job
   script:
     - docker load < image.tar
     - docker run daily_planner_image pytest -s -v
