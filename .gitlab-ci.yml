@@ -10,14 +10,14 @@ build-job:
   script:
     - docker build -t daily_planner_image .
   tags:
-    - windows
+    - werf
 
 unit-test-job:
   stage: test
   script:
     - docker run --rm daily_planner_image pytest -s -v
   tags:
-    - windows
+    - werf
 
 lint-test-job:
   stage: linttest
