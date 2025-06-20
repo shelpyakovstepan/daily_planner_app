@@ -15,8 +15,9 @@ build-job:
 
 unit-test-job:
   stage: test
-  tags:
-    - werf
+  image: docker:24.0
+  services:
+    - docker:24.0-dind
   script:
     - docker run --rm daily_planner_image pytest -s -v
 
