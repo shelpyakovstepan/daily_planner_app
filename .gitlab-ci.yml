@@ -10,7 +10,7 @@ build-job:
   script:
     - docker build -t daily_planner_image .
   tags:
-    - shell
+    - ssh
 
 unit-test-job:
   stage: test
