@@ -19,6 +19,7 @@ unit-test-job:
   services:
     - docker:24.0-dind
   script:
+    - docker build -t daily_planner_image .
     - docker run --rm daily_planner_image pytest -s -v
 
 lint-test-job:
