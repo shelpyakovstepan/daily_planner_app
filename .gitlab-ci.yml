@@ -10,8 +10,7 @@ build-job:
   script:
     - docker build -t daily_planner_image .
   tags:
-    - pwsh
-    - werf
+    - powershell
 
 unit-test-job:
   stage: test
