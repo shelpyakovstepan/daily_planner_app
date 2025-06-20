@@ -47,7 +47,6 @@ cleanup-job:
 #
 #services:
 #  - docker:20.10.16-dind
-#
 #build-job:
 #  stage: build
 #  image: docker:24.0
