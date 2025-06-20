@@ -5,35 +5,19 @@ stages:
   - deploy
   - cleanup
 
-image: docker:20.10.16
-
-services:
-  - docker:20.10.16-dind
-
 build-job:
   stage: build
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
   script:
     - docker build -t daily_planner_image .
-    - docker save daily_planner_image > image.tar
-  artifacts:
-    paths:
-      - image.tar
-    expire_in: 1 hour
-
+  tags:
+    - windows
 
 unit-test-job:
   stage: test
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
-  dependencies:
-    - build-job
   script:
-    - docker load < image.tar
-    - docker run --env-file /daily_planner/.env daily_planner_image pytest -s -v
+    - docker run --rm daily_planner_image pytest -s -v
+  tags:
+    - windows
 
 lint-test-job:
   stage: linttest
@@ -58,3 +42,57 @@ cleanup-job:
   script:
     - docker compose down -d
 
+
+#image: docker:20.10.16
+#
+#services:
+#  - docker:20.10.16-dind
+#
+#build-job:
+#  stage: build
+#  image: docker:24.0
+#  services:
+#    - docker:24.0-dind
+#  script:
+#    - docker build -t daily_planner_image .
+#    - docker save daily_planner_image > image.tar
+#  artifacts:
+#    paths:
+#      - image.tar
+#    expire_in: 1 hour
+#
+#
+#unit-test-job:
+#  stage: test
+#  image: docker:24.0
+#  services:
+#    - docker:24.0-dind
+#  dependencies:
+#    - build-job
+#  script:
+#    - docker load < image.tar
+#    - docker run --env-file /daily_planner/.env daily_planner_image pytest -s -v
+#
+#lint-test-job:
+#  stage: linttest
+#  script:
+#    - echo "Проверка форматирования с помощью black..."
+#    - docker exec -it daily_planner black --config .black --check .
+#    - echo "Статическая проверка типов с помощью pyright..."
+#    - docker exec -it daily_planner pyright .
+#    - echo  "Запуск flake8..."
+#    - docker exec -it daily_planner flake8 .
+#    - echo "Проверка порядка импортов с помощью isort..."
+#    - docker exec -it daily_planner isort --check-only .
+#    - docker daily_planner_image
+#
+#deploy-job:
+#  stage: deploy
+#  script:
+#    - docker compose up -d
+#
+#cleanup-job:
+#  stage: cleanup
+#  script:
+#    - docker compose down -d
+#
