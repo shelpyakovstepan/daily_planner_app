@@ -7,13 +7,13 @@ stages:
 
 build-job:
   stage: build
-  tags:
-    - werf
   script:
     - docker build -t daily_planner_image .
 
 unit-test-job:
   stage: test
+  tags:
+    - werf
   script:
     - docker run --rm daily_planner_image pytest -s -v
 
