@@ -12,7 +12,7 @@ build-job:
   tags:
     - shell
     - werf
-    -
+
 unit-test-job:
   stage: test
   script:
