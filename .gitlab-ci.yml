@@ -10,10 +10,6 @@ build-job:
   image: docker:24.0
   services:
     - docker:24.0-dind
-  before_script:
-    - apk add --no-cache ruby ruby-dev build-base
-    - gem install bundler
-    - bundle install
   script:
     - docker build -t daily_planner_image .
 
