@@ -33,7 +33,7 @@ unit-test-job:
     - build-job
   script:
     - docker load < image.tar
-    - docker run --env-file daily_planner_app/.env daily_planner_image pytest -s -v
+    - docker run --env-file daily_planner/.env daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: linttest
