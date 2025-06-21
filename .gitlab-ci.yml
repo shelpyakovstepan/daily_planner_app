@@ -24,7 +24,7 @@ unit-test-job:
     - echo "$ENV_NON_DEV" > .env-non-dev
     - docker compose build
     - echo "$ENV_FILE" > .env
-    - docker compose exec pytest -s -v
+    - docker run --rm pytest -s -v
 
 lint-test-job:
   stage: linttest
