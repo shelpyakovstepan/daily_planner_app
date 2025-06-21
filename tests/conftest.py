@@ -46,27 +46,46 @@ async def prepare_database():
 
         await session.commit()
 
-
-@pytest.fixture(scope="session", autouse=True)
-async def prepare_rabbitmq_and_celery():
-    assert settings.MODE == "TEST"
-
-    conn_url = (
-        f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
-        f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/"
-    )
+logger.info(f"MODE:{settings.MODE}")
+def check_rabbit_connection():
+    if settings.MODE == "TEST":
+        conn_url = (
+            f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
+            f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/"
+        )
+        logger.info("TEST RABBIT")
+    else:
+        conn_url = (
+            f"amqp://{settings.RABBIT_USER}:{settings.RABBIT_PASS}@"
+            f"{settings.RABBIT_HOST}:{settings.RABBIT_PORT}/"
+        )
     try:
         with Connection(conn_url) as conn:
             conn.connect()
             logger.info("Successfully connected to RabbitMQ")
-            celery = Celery(
-                "tasks",
-                broker=f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
-                       f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/",
-                include=["app.tasks.tasks"],
-            )
+            return True
     except Exception as e:
-        logger.error(f"RabbitMQ and Celery connection failed: {str(e)}", exc_info=True)
+        logger.error(f"RabbitMQ connection failed: {str(e)}", exc_info=True)
+        return False
+
+
+if check_rabbit_connection():
+    if settings.MODE == "TEST":
+        celery = Celery(
+            "tasks",
+            broker=f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
+                   f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/",
+            include=["app.tasks.tasks"],
+        )
+    else:
+        celery = Celery(
+            "tasks",
+            broker=f"amqp://{settings.RABBIT_USER}:{settings.RABBIT_PASS}@"
+            f"{settings.RABBIT_HOST}:{settings.RABBIT_PORT}/",
+            include=["app.tasks.tasks"],
+        )
+else:
+    raise RuntimeError("Cannot initialize Celery without RabbitMQ connection")
 
 from app.main import app as fastapi_app
 
