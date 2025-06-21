@@ -4,9 +4,7 @@ import json
 
 # THIRDPARTY
 import httpx
-from celery import Celery
 from httpx import AsyncClient
-from kombu import Connection
 import pytest
 from sqlalchemy import insert
 
@@ -14,7 +12,7 @@ from sqlalchemy import insert
 from app.config import settings
 from app.database import Base, async_session_maker, engine
 from app.entries.models import Entries
-from app.logger import logger
+from app.main import app as fastapi_app
 from app.users.models import Users
 
 
@@ -46,48 +44,6 @@ async def prepare_database():
 
         await session.commit()
 
-logger.info(f"MODE:{settings.MODE}")
-def check_rabbit_connection():
-    if settings.MODE == "TEST":
-        conn_url = (
-            f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
-            f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/"
-        )
-        logger.info("TEST RABBIT")
-    else:
-        conn_url = (
-            f"amqp://{settings.RABBIT_USER}:{settings.RABBIT_PASS}@"
-            f"{settings.RABBIT_HOST}:{settings.RABBIT_PORT}/"
-        )
-    try:
-        with Connection(conn_url) as conn:
-            conn.connect()
-            logger.info("Successfully connected to RabbitMQ")
-            return True
-    except Exception as e:
-        logger.error(f"RabbitMQ connection failed: {str(e)}", exc_info=True)
-        return False
-
-
-if check_rabbit_connection():
-    if settings.MODE == "TEST":
-        celery = Celery(
-            "tasks",
-            broker=f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
-                   f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/",
-            include=["app.tasks.tasks"],
-        )
-    else:
-        celery = Celery(
-            "tasks",
-            broker=f"amqp://{settings.RABBIT_USER}:{settings.RABBIT_PASS}@"
-            f"{settings.RABBIT_HOST}:{settings.RABBIT_PORT}/",
-            include=["app.tasks.tasks"],
-        )
-else:
-    raise RuntimeError("Cannot initialize Celery without RabbitMQ connection")
-
-from app.main import app as fastapi_app
 
 @pytest.fixture(scope="function")
 async def ac():
