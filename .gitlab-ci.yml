@@ -23,8 +23,8 @@ unit-test-job:
   script:
     - docker build -t daily_planner_image .
     - echo "$ENV_FILE" > .env
-    - docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4.1.1-management
-    - docker run --rm --env-file .env daily_planner_image pytest -s -v
+    - docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq
+    - docker run --rm --env-file .env -e MODE=TEST daily_planner_image pytest -s -v
     - rm -f .env
     - docker rm daily_planner_rabbitmq
 

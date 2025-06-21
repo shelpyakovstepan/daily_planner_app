@@ -4,7 +4,9 @@ import json
 
 # THIRDPARTY
 import httpx
+from celery import Celery
 from httpx import AsyncClient
+from kombu import Connection
 import pytest
 from sqlalchemy import insert
 
@@ -12,6 +14,7 @@ from sqlalchemy import insert
 from app.config import settings
 from app.database import Base, async_session_maker, engine
 from app.entries.models import Entries
+from app.logger import logger
 from app.main import app as fastapi_app
 from app.users.models import Users
 
@@ -43,6 +46,28 @@ async def prepare_database():
         await session.execute(add_entries)
 
         await session.commit()
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def prepare_rabbitmq_and_celery():
+    assert settings.MODE == "TEST"
+
+    conn_url = (
+        f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
+        f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/"
+    )
+    try:
+        with Connection(conn_url) as conn:
+            conn.connect()
+            logger.info("Successfully connected to RabbitMQ")
+            celery = Celery(
+                "tasks",
+                broker=f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
+                       f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/",
+                include=["app.tasks.tasks"],
+            )
+    except Exception as e:
+        logger.error(f"RabbitMQ and Celery connection failed: {str(e)}", exc_info=True)
 
 
 @pytest.fixture(scope="function")
