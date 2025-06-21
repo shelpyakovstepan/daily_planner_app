@@ -18,12 +18,11 @@ unit-test-job:
   image: docker:24.0
   services:
     - docker:24.0-dind
-    - postgres:latest
     - rabbitmq:latest
   script:
     - docker build -t daily_planner_image .
     - echo "$ENV_FILE" > .env
-    - docker run --rm --env-file .env daily_planner_image pytest -s -v
+    - docker run --rm --env-file .env -e TEST_RABBIT_HOST=rabbitmq daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: linttest
