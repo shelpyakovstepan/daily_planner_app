@@ -1,4 +1,5 @@
 # STDLIB
+import os
 from datetime import datetime
 import json
 
@@ -18,7 +19,7 @@ from app.users.models import Users
 
 @pytest.fixture(autouse=True, scope="session")
 def set_test_env():
-    settings.MODE = "TEST"
+    os.environ["MODE"] = "TEST"
     assert settings.MODE == "TEST"
 
 @pytest.fixture(scope="session", autouse=True)
