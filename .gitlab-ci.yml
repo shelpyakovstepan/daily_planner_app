@@ -11,7 +11,7 @@ build-job:
   services:
     - docker:24.0-dind
   script:
-    - docker build -t daily_planner_image .
+    - docker compose build -t daily_planner_image .
 
 unit-test-job:
   stage: test
@@ -20,9 +20,9 @@ unit-test-job:
     - docker:24.0-dind
     - rabbitmq:latest
   script:
-    - docker build -t daily_planner_image .
+    - docker compose build -t daily_planner_image .
     - echo "$ENV_FILE" > .env
-    - docker run --rm --env-file .env -e TEST_RABBIT_HOST=rabbitmq daily_planner_image pytest -s -v
+    - docker run --rm --env-file .env daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: linttest
