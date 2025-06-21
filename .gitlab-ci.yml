@@ -5,14 +5,14 @@ stages:
   - deploy
   - cleanup
 
-build-job:
-  stage: build
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
-  script:
-    - echo "$ENV_NON_DEV" > .env-non-dev
-    - docker compose build
+#build-job:
+#  stage: build
+#  image: docker:24.0
+#  services:
+#    - docker:24.0-dind
+#  script:
+#    - echo "$ENV_NON_DEV" > .env-non-dev
+#    - docker compose build
 
 unit-test-job:
   stage: test
@@ -24,7 +24,7 @@ unit-test-job:
     - echo "$ENV_NON_DEV" > .env-non-dev
     - docker compose build
     - echo "$ENV_FILE" > .env
-    - docker exec --rm --env-file .env daily_planner_image pytest -s -v
+    - docker compose exec -it pytest -s -v
 
 lint-test-job:
   stage: linttest
