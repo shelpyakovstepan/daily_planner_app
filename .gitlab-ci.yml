@@ -11,7 +11,7 @@ build-job:
   services:
     - docker:24.0-dind
   script:
-    - docker build -t daily_planner_imag .
+    - docker build -t daily_planner_image .
 
 unit-test-job:
   stage: test
@@ -21,9 +21,9 @@ unit-test-job:
     - name: rabbitmq:4.1.1-management
       alias: rabbitmq
   script:
-    - docker build -t daily_planner_imag .
+    - docker build -t daily_planner_image .
     - echo "$ENV_FILE" > .env
-    - docker run --env-file .env -d rabbitmq
+    - docker run --env-file .env -it rabbitmq
     - docker run --rm --env-file .env daily_planner_image pytest -s -v
     - rm -f .env
     - docker rm daily_planner_rabbitmq
