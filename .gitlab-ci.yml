@@ -23,10 +23,7 @@ unit-test-job:
   script:
     - docker build -t daily_planner_image .
     - echo "$ENV_FILE" > .env
-    - docker run --rm \
-      --link rabbitmq:rabbitmq \
-      -e TEST_RABBIT_HOST="rabbitmq" \
-      --env-file .env daily_planner_image pytest -s -v
+    - docker run --rm -env-file .env --link rabbitmq:rabbitmq -e TEST_RABBIT_HOST="rabbitmq" daily_planner_image pytest -s -v
     - rm -f .env
 
 lint-test-job:
