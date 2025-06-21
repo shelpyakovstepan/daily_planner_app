@@ -24,7 +24,7 @@ unit-test-job:
     - echo "$ENV_NON_DEV" > .env-non-dev
     - docker compose build
     - echo "$ENV_FILE" > .env
-    - docker run --rm --env-file .env daily_planner_image pytest -s -v
+    - docker exec --rm --env-file .env daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: linttest
