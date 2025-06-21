@@ -19,7 +19,7 @@ unit-test-job:
   services:
     - docker:24.0-dind
     - name: rabbitmq:4.1.1-management
-    - alias: rabbitmq
+      alias: rabbitmq
   script:
     - docker build -t daily_planner_image .
     - echo "$ENV_FILE" > .env
