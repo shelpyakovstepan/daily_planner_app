@@ -12,7 +12,7 @@ build-job:
     - docker:24.0-dind
   script:
     - echo "$ENV_NON_DEV" > .env-non-dev
-    - docker compose build .
+    - docker compose build
 
 unit-test-job:
   stage: test
