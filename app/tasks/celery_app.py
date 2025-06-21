@@ -2,7 +2,6 @@
 from celery import Celery
 from celery.schedules import crontab
 from kombu import Connection
-from poetry.console.commands import self
 
 # FIRSTPARTY
 from app.config import settings
