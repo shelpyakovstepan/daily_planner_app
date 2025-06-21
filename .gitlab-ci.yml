@@ -24,7 +24,7 @@ unit-test-job:
     - docker build -t daily_planner_imag .
     - echo "$ENV_FILE" > .env
     - docker run --env-file .env -d rabbitmq
-    - docker run --rm --env-file .env daily_planner_imag pytest -s -v
+    - docker run --rm --env-file .env daily_planner_image pytest -s -v
     - rm -f .env
     - docker rm daily_planner_rabbitmq
 
