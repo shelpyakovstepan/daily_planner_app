@@ -23,7 +23,6 @@ unit-test-job:
   script:
     - echo "$ENV_NON_DEV" > .env-non-dev
     - docker compose build
-    - echo "$ENV_FILE" > .env
     - docker compose run --rm daily_planner pytest -s -v
 
 lint-test-job:
