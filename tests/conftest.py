@@ -15,7 +15,6 @@ from app.config import settings
 from app.database import Base, async_session_maker, engine
 from app.entries.models import Entries
 from app.logger import logger
-from app.main import app as fastapi_app
 from app.users.models import Users
 
 
@@ -69,6 +68,7 @@ async def prepare_rabbitmq_and_celery():
     except Exception as e:
         logger.error(f"RabbitMQ and Celery connection failed: {str(e)}", exc_info=True)
 
+from app.main import app as fastapi_app
 
 @pytest.fixture(scope="function")
 async def ac():
