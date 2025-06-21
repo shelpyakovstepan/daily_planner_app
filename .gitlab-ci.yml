@@ -21,7 +21,8 @@ unit-test-job:
     - docker:24.0-dind
     - rabbitmq:latest
   script:
-    - docker compose build .
+    - echo "$ENV_NON_DEV" > .env-non-dev
+    - docker compose build
     - echo "$ENV_FILE" > .env
     - docker run --rm --env-file .env daily_planner_image pytest -s -v
 
