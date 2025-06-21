@@ -20,8 +20,8 @@ unit-test-job:
     - docker:24.0-dind
   script:
     - docker build -t daily_planner_image .
-    - echo "$ENV_FILE" > .env.ci
-    - docker run --rm --env-file .env.ci daily_planner_image pytest -s -v
+    - echo "$ENV_FILE" > .env
+    - docker run --rm --env-file .env daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: linttest
