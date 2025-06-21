@@ -7,7 +7,6 @@ from kombu import Connection
 from app.config import settings
 from app.logger import logger
 
-settings.MODE="TEST"
 logger.info(f"MODE:{settings.MODE}")
 def check_rabbit_connection():
     if settings.MODE == "TEST":

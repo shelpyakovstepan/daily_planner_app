@@ -13,6 +13,7 @@ from app.config import settings
 from app.database import Base, async_session_maker, engine
 from app.entries.models import Entries
 from app.main import app as fastapi_app
+from app.config import settings
 from app.users.models import Users
 
 
@@ -53,7 +54,7 @@ async def ac():
         yield ac
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def authenticated_ac():
     async with AsyncClient(
         base_url="http://test", transport=httpx.ASGITransport(app=fastapi_app)
@@ -66,7 +67,7 @@ async def authenticated_ac():
         yield ac
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def authenticated_ac_admin():
     async with AsyncClient(
         base_url="http://test", transport=httpx.ASGITransport(app=fastapi_app)
