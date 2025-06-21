@@ -20,7 +20,9 @@ unit-test-job:
     - docker:24.0-dind
   script:
     - docker build -t daily_planner_image .
-    - echo "$ENV_FILE" > .env
+    - echo "$MODE"
+    - echo %MODE
+    - echo $ENV_FILE > .env
     - docker run --rm --env-file .env daily_planner_image pytest -s -v
     - rm -f .env
 
