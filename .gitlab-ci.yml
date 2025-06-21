@@ -22,7 +22,7 @@ unit-test-job:
     - rabbitmq:latest
   script:
     - docker build -t daily_planner_image .
-    - docker run --rm --env-file "$ENV_FILE" -e MODE=TEST daily_planner_image pytest -s -v
+    - docker run --rm --env-file "$ENV_FILE" daily_planner_image pytest -s -v
 
 lint-test-job:
   stage: linttest
