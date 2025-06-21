@@ -21,7 +21,7 @@ unit-test-job:
   script:
     - docker build -t daily_planner_image .
     - echo "$ENV_FILE" > .env
-    - docker run --rm --env-file .env daily_planner_image/daily_planner pytest -s -v
+    - docker run --rm --env-file .env daily_planner_image pytest -s -v
     - rm -f .env
 
 lint-test-job:
