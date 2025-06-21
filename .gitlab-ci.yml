@@ -18,10 +18,15 @@ unit-test-job:
   image: docker:24.0
   services:
     - docker:24.0-dind
+    - name: rabbitmq:4.1.1-management
+    - alias: rabbitmq
   script:
     - docker build -t daily_planner_image .
     - echo "$ENV_FILE" > .env
-    - docker run --rm --env-file .env daily_planner_image pytest -s -v
+    - docker run --rm \
+      --link rabbitmq:rabbitmq \
+      -e TEST_RABBIT_HOST="rabbitmq" \
+      --env-file .env daily_planner_image pytest -s -v
     - rm -f .env
 
 lint-test-job:
