@@ -13,6 +13,7 @@ build-job:
   script:
     - echo "$ENV_NON_DEV" > .env-non-dev
     - docker compose build
+    - rm -f .env-non-dev
 
 unit-test-job:
   stage: test
@@ -30,6 +31,7 @@ lint-test-job:
   services:
     - docker:24.0-dind
   script:
+    - echo "$ENV_NON_DEV" > .env-non-dev
     - echo "Проверка форматирования с помощью black..."
     - docker compose exec -it daily_planner black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
