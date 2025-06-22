@@ -60,4 +60,6 @@ cleanup-job:
   services:
     - docker:24.0-dind
   script:
+    - echo "$ENV_NON_DEV" > .env-non-dev
     - docker compose down
+    - rm -f .env-non-dev
