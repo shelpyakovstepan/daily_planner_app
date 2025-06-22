@@ -8,10 +8,13 @@ from app.config import settings
 from app.logger import logger
 
 logger.info(f"MODE:{settings.MODE}")
+
+
 def check_rabbit_connection():
     if settings.MODE == "TEST":
         conn_url = (
-            f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/"
+            f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
+            f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/"
         )
         logger.info("TEST RABBIT")
     else:
@@ -33,9 +36,8 @@ if check_rabbit_connection():
     if settings.MODE == "TEST":
         celery = Celery(
             "tasks",
-            #broker=f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
-            #       f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/",
-            broker=f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/",
+            broker=f"amqp://{settings.TEST_RABBIT_USER}:{settings.TEST_RABBIT_PASS}@"
+            f"{settings.TEST_RABBIT_HOST}:{settings.TEST_RABBIT_PORT}/",
             include=["app.tasks.tasks"],
         )
     else:

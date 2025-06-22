@@ -34,7 +34,9 @@ async def register(user_data: SUsersAuth):
     await UserDAO.add(email=user_data.email, hashed_password=hashed_password)
     logger.info("User successfully registered")
 
-    send_registration_email.delay(user_data.email) # pyright: ignore [reportFunctionMemberAccess]
+    send_registration_email.delay(  # pyright: ignore [reportFunctionMemberAccess]
+        user_data.email
+    )
 
 
 @router.post("/login")
@@ -62,7 +64,7 @@ async def change_admin_status(
     if not user:
         raise NotUserException
 
-    return user # pyright: ignore [reportReturnType]
+    return user  # pyright: ignore [reportReturnType]
 
 
 @router.get("/me")

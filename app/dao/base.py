@@ -57,4 +57,7 @@ class BaseDao:
 
             return result.scalar()
 
-# pyright: reportArgumentType=false, reportCallIssue=false, reportAttributeAccessIssue=false
+
+# pyright: reportArgumentType=false
+# pyright: reportCallIssue=false
+# pyright: reportAttributeAccessIssue=false

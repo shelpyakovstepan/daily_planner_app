@@ -24,7 +24,11 @@ else:
 
 engine = create_async_engine(DATABASE_URL, **DATABASE_PARAMS)
 
-async_session_maker = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False) # pyright: ignore [reportCallIssue, reportArgumentType]
+async_session_maker = sessionmaker(
+    engine,  # pyright: ignore [reportCallIssue, reportArgumentType]
+    class_=AsyncSession,
+    expire_on_commit=False,  # pyright: ignore [reportCallIssue, reportArgumentType]
+)
 
 
 async def check_db_connection():

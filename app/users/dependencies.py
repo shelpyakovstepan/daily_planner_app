@@ -28,10 +28,10 @@ async def get_current_user(token: str = Depends(get_token)):
         payload = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
     except JWTError:
         raise IncorrectTokenFormatException
-    expire: str = payload.get("exp") # pyright: ignore [reportAssignmentType]
+    expire: str = payload.get("exp")  # pyright: ignore [reportAssignmentType]
     if (not expire) or int(expire) < datetime.now(UTC).timestamp():
         raise TokenExpiredException
-    user_id: str = payload.get("sub") # pyright: ignore [reportAssignmentType]
+    user_id: str = payload.get("sub")  # pyright: ignore [reportAssignmentType]
     if not user_id:
         raise UserIsNotPresentException
     user = await UserDAO.find_by_id(int(user_id))

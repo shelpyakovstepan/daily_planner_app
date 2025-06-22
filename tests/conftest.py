@@ -1,5 +1,4 @@
 # STDLIB
-import os
 from datetime import datetime
 import json
 
@@ -10,7 +9,6 @@ import pytest
 from sqlalchemy import insert
 
 # FIRSTPARTY
-from app.config import settings
 from app.database import Base, async_session_maker, engine
 from app.entries.models import Entries
 from app.main import app as fastapi_app
