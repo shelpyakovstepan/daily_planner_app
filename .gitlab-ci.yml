@@ -22,6 +22,7 @@ unit-test-job:
     - docker:24.0-dind
   script:
     - echo "$ENV_TEST" > .env-non-dev
+    - echo "Начало тестирования"
     - docker compose run --rm daily_planner pytest -s -v
     - rm -f .env-non-dev
 
