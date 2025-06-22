@@ -7,9 +7,6 @@ stages:
 
 build-job:
   stage: build
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
   script:
     - echo "$ENV_NON_DEV" > .env-non-dev
     - docker compose build
@@ -17,9 +14,6 @@ build-job:
 
 unit-test-job:
   stage: test
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
   script:
     - echo "$ENV_TEST" > .env-non-dev
     - echo "Начало тестирования"
