@@ -21,7 +21,6 @@ unit-test-job:
     - docker:24.0-dind
   script:
     - echo "$ENV_TEST" > .env-non-dev
-    #- docker compose build
     - docker compose run --rm daily_planner pytest -s -v
     - rm -f .env-non-dev
 
@@ -32,14 +31,13 @@ lint-test-job:
     - docker:24.0-dind
   script:
     - echo "Проверка форматирования с помощью black..."
-    - docker exec -it daily_planner black --config .black --check .
+    - docker compose exec -it daily_planner black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
-    - docker exec -it daily_planner pyright .
+    - docker compose exec -it daily_planner pyright .
     - echo  "Запуск flake8..."
-    - docker exec -it daily_planner flake8 .
+    - docker compose exec -it daily_planner flake8 .
     - echo "Проверка порядка импортов с помощью isort..."
-    - docker exec -it daily_planner isort --check-only .
-    - docker daily_planner_image
+    - docker compose exec -it daily_planner isort --check-only .
 
 deploy-job:
   stage: deploy
