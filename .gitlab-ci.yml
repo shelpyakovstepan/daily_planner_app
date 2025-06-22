@@ -30,7 +30,7 @@ lint-test-job:
     - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
     - docker compose run -d daily_planner
     - echo "Проверка форматирования с помощью black..."
-    - docker compose exec -it daily_planner_app black --config .black --check .
+    - docker compose exec -it daily_planner black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
     - docker compose exec -it daily_planner pyright .
     - echo  "Запуск flake8..."
