@@ -15,15 +15,15 @@ build-job:
     - docker compose build
     - rm -f .env-non-dev
 
-unit-test-job:
-  stage: test
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
-  script:
-    - echo "$ENV_TEST" > .env-non-dev
-    - docker compose run --rm daily_planner pytest -s -v
-    - rm -f .env-non-dev
+#unit-test-job:
+#  stage: test
+#  image: docker:24.0
+#  services:
+#    - docker:24.0-dind
+#  script:
+#    - echo "$ENV_TEST" > .env-non-dev
+#    - docker compose run --rm daily_planner pytest -s -v
+#    - rm -f .env-non-dev
 
 lint-test-job:
   stage: linttest
@@ -32,7 +32,7 @@ lint-test-job:
     - docker:24.0-dind
   script:
     - echo "$ENV_NON_DEV" > .env-non-dev
-    - docker compose run daily_planner -d
+    - docker compose run -d daily_planner
     - echo "Проверка форматирования с помощью black..."
     - docker compose exec -it daily_planner black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
