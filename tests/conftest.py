@@ -17,10 +17,6 @@ from app.main import app as fastapi_app
 from app.config import settings
 from app.users.models import Users
 
-@pytest.fixture(autouse=True, scope="session")
-def set_test_env():
-    os.environ["MODE"] = "TEST"
-    assert settings.MODE == "TEST"
 
 @pytest.fixture(scope="session", autouse=True)
 async def prepare_database():

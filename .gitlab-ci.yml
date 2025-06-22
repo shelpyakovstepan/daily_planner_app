@@ -5,29 +5,31 @@ stages:
   - deploy
   - cleanup
 
-#build-job:
-#  stage: build
-#  image: docker:24.0
-#  services:
-#    - docker:24.0-dind
-#  script:
-#    - echo "$ENV_NON_DEV" > .env-non-dev
-#    - docker compose build
+build-job:
+  stage: build
+  image: docker:24.0
+  services:
+    - docker:24.0-dind
+  script:
+    - echo "$ENV_NON_DEV" > .env-non-dev
+    - docker compose build
 
 unit-test-job:
   stage: test
   image: docker:24.0
   services:
     - docker:24.0-dind
-    - rabbitmq:latest
   script:
     - echo "$ENV_TEST" > .env-non-dev
-    - docker compose build
+    #- docker compose build
     - docker compose run --rm daily_planner pytest -s -v
     - rm -f .env-non-dev
 
 lint-test-job:
   stage: linttest
+  image: docker:24.0
+  services:
+    - docker:24.0-dind
   script:
     - echo "Проверка форматирования с помощью black..."
     - docker exec -it daily_planner black --config .black --check .
