@@ -21,9 +21,10 @@ unit-test-job:
     - docker:24.0-dind
     - rabbitmq:latest
   script:
-    - echo "$ENV_NON_DEV" > .env-non-dev
+    - echo "$ENV_TEST" > .env-non-dev
     - docker compose build
     - docker compose run --rm daily_planner pytest -s -v
+    - rm -f .env-non-dev
 
 lint-test-job:
   stage: linttest
