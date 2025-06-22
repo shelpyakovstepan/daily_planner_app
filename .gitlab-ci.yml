@@ -16,7 +16,7 @@ unit-test-job:
   stage: test
   script:
     - echo "$ENV_TEST" > .env-non-dev
-    - echo "LOG_LEVEL=INFO" > .env-non-dev
+    - iconv -f UTF-16LE -t UTF-8 .env-non-dev > .env-non-dev.utf8 && mv -f .env-non-dev.utf8 .env-non-dev
     - echo "Начало тестирования"
     - docker compose run --rm daily_planner pytest -s -v
     - rm -Fo .env-non-dev
