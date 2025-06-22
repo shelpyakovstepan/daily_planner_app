@@ -15,15 +15,15 @@ build-job:
     - docker compose build
     - rm -f .env-non-dev
 
-#unit-test-job:
-#  stage: test
-#  image: docker:24.0
-#  services:
-#    - docker:24.0-dind
-#  script:
-#    - echo "$ENV_TEST" > .env-non-dev
-#    - docker compose run --rm daily_planner pytest -s -v
-#    - rm -f .env-non-dev
+unit-test-job:
+  stage: test
+  image: docker:24.0
+  services:
+    - docker:24.0-dind
+  script:
+    - echo "$ENV_TEST" > .env-non-dev
+    - docker compose run --rm daily_planner pytest -s -v
+    - rm -f .env-non-dev
 
 lint-test-job:
   stage: linttest
@@ -60,4 +60,4 @@ cleanup-job:
   services:
     - docker:24.0-dind
   script:
-    - docker compose down -d
+    - docker compose down
