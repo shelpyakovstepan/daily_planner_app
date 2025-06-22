@@ -28,9 +28,9 @@ lint-test-job:
     - echo "$ENV_NON_DEV" > .env-non-dev
     - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
     - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
-    - docker compose run -d daily_planner_app
+    - docker compose run -d daily_planner
     - echo "Проверка форматирования с помощью black..."
-    - docker compose exec -it daily_planner black --config .black --check .
+    - docker compose exec -it daily_planner_app black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
     - docker compose exec -it daily_planner pyright .
     - echo  "Запуск flake8..."
