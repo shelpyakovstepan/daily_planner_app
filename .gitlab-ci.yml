@@ -10,15 +10,12 @@ build-job:
   script:
     - echo "$ENV_NON_DEV" > .env-non-dev
     - docker compose build
-    - rm -Fo .env-non-dev
 
 unit-test-job:
   stage: test
   script:
-    - echo "$ENV_TEST" > .env-non-dev
     - echo "Начало тестирования"
     - docker compose run --rm daily_planner pytest -s -v
-    - rm -Fo .env-non-dev
 
 lint-test-job:
   stage: linttest
