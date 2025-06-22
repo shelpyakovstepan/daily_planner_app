@@ -24,11 +24,10 @@ unit-test-job:
 
 lint-test-job:
   stage: linttest
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
   script:
     - echo "$ENV_NON_DEV" > .env-non-dev
+    - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
+    - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
     - docker compose run -d daily_planner
     - echo "Проверка форматирования с помощью black..."
     - docker compose exec -it daily_planner black --config .black --check .
@@ -43,20 +42,18 @@ lint-test-job:
 
 deploy-job:
   stage: deploy
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
   script:
     - echo "$ENV_NON_DEV" > .env-non-dev
+    - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
+    - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
     - docker compose up -d
     - rm -Fo .env-non-dev
 
 cleanup-job:
   stage: cleanup
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
   script:
     - echo "$ENV_NON_DEV" > .env-non-dev
+    - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
+    - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
     - docker compose down
     - rm -Fo .env-non-dev
