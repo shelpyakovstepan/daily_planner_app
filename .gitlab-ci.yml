@@ -22,7 +22,7 @@ unit-test-job:
     - docker:24.0-dind
   script:
     - echo "$ENV_TEST" > .env-non-dev
-    - docker compose run --rm daily_planner pytest -s -v
+    - docker compose run daily_planner pytest -s -v
     - rm -f .env-non-dev
 
 lint-test-job:
@@ -40,6 +40,7 @@ lint-test-job:
     - docker compose exec -it daily_planner flake8 .
     - echo "Проверка порядка импортов с помощью isort..."
     - docker compose exec -it daily_planner isort --check-only .
+    - docker compose rm daily_planner
 
 deploy-job:
   stage: deploy
