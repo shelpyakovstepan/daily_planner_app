@@ -45,10 +45,16 @@ lint-test-job:
 
 deploy-job:
   stage: deploy
+  image: docker:24.0
+  services:
+    - docker:24.0-dind
   script:
     - docker compose up -d
 
 cleanup-job:
   stage: cleanup
+  image: docker:24.0
+  services:
+    - docker:24.0-dind
   script:
     - docker compose down -d
