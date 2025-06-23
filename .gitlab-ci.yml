@@ -7,6 +7,8 @@ stages:
 
 before_script:
   - echo "$ENV_NON_DEV" > .env-non-dev
+  - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
+  - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
 
 after_script:
   - rm -Fo .env-non-dev
@@ -18,10 +20,10 @@ build-job:
 
 test-job:
   stage: test
+  variables:
+    MODE: "TEST"
   script:
-    - .env-non-dev:MODE = "TEST"
-    - echo .env-non-dev:MODE
-    - docker run --rm daily_planner_image pytest -s -v
+    - docker run -e MODE=$MODE --rm daily_planner_image pytest -s -v
 
 lint-job:
   stage: lint
