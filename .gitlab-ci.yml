@@ -64,13 +64,13 @@ lint-test-job:
   needs: [run-job]
   script:
     - echo "Проверка форматирования с помощью black..."
-    - docker exec -it daily_planner_app black --config .black --check .
+    - docker exec daily_planner_app black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
-    - docker exec -it daily_planner_app pyright .
+    - docker exec daily_planner_app pyright .
     - echo  "Запуск flake8..."
-    - docker exec -it daily_planner_app flake8 .
+    - docker exec daily_planner_app flake8 .
     - echo "Проверка порядка импортов с помощью isort..."
-    - docker exec -it daily_planner_app isort --check-only .
+    - docker exec daily_planner_app isort --check-only .
 
 
 test-job:
