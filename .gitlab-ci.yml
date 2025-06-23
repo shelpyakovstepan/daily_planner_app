@@ -13,30 +13,65 @@ before_script:
 after_script:
   - rm -Fo .env-non-dev
 
+#build-job:
+#  stage: build
+#  script:
+#    - docker build -t daily_planner_image .
+#
+#test-job:
+#  stage: test
+#  script:
+#    - docker compose run -e MODE=TEST --rm daily_planner_image pytest -s -v
+#
+#lint-job:
+#  stage: lint
+#  script:
+#    - docker run -d daily_planner_image
+#    - echo "Проверка форматирования с помощью black..."
+#    - docker exec -it daily_planner black --config .black --check .
+#    - echo "Статическая проверка типов с помощью pyright..."
+#    - docker compose exec -it daily_planner pyright .
+#    - echo  "Запуск flake8..."
+#    - docker compose exec -it daily_planner flake8 .
+#    - echo "Проверка порядка импортов с помощью isort..."
+#    - docker compose exec -it daily_planner isort --check-only .
+#    - docker stop daily_planner_image
+#    - docker rm daily_planner_image
+#
+#deploy-job:
+#  stage: deploy
+#  script:
+#    - docker compose up -d
+#
+#cleanup-job:
+#  stage: cleanup
+#  script: docker compose down
+#
 build-job:
   stage: build
   script:
-    - docker build -t daily_planner_image .
+    - docker compose build
 
-test-job:
+unit-test-job:
   stage: test
   script:
-    - docker compose run -e MODE=TEST --rm daily_planner_image pytest -s -v
+    - echo "Начало тестирования"
+    - docker compose run -e MODE=TEST --rm daily_planner pytest -s -v
 
-lint-job:
+lint-test-job:
   stage: lint
   script:
-    - docker run -d daily_planner_image
+    - docker compose run -d daily_planner
     - echo "Проверка форматирования с помощью black..."
-    - docker exec -it daily_planner black --config .black --check .
+    - docker compose exec -it daily_planner black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
     - docker compose exec -it daily_planner pyright .
     - echo  "Запуск flake8..."
     - docker compose exec -it daily_planner flake8 .
     - echo "Проверка порядка импортов с помощью isort..."
     - docker compose exec -it daily_planner isort --check-only .
-    - docker stop daily_planner_image
-    - docker rm daily_planner_image
+    - docker compose stop daily_planner
+    - docker compose rm daily_planner
 
 deploy-job:
   stage: deploy
@@ -45,57 +80,5 @@ deploy-job:
 
 cleanup-job:
   stage: cleanup
-  script: docker compose down
-
-#build-job:
-#  stage: build
-#  script:
-#    - echo "$ENV_NON_DEV" > .env-non-dev
-#    - docker compose build
-#    - rm -Fo .env-non-dev
-#
-#unit-test-job:
-#  stage: test
-#  script:
-#    - echo "$ENV_TEST" > .env-non-dev
-#    - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
-#    - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
-#    - echo "Начало тестирования"
-#    - docker compose run --rm daily_planner pytest -s -v
-#    - rm -Fo .env-non-dev
-#
-#lint-test-job:
-#  stage: linttest
-#  script:
-#    - echo "$ENV_NON_DEV" > .env-non-dev
-#    - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
-#    - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
-#    - docker compose run -d daily_planner
-#    - echo "Проверка форматирования с помощью black..."
-#    - docker compose exec -it daily_planner black --config .black --check .
-#    - echo "Статическая проверка типов с помощью pyright..."
-#    - docker compose exec -it daily_planner pyright .
-#    - echo  "Запуск flake8..."
-#    - docker compose exec -it daily_planner flake8 .
-#    - echo "Проверка порядка импортов с помощью isort..."
-#    - docker compose exec -it daily_planner isort --check-only .
-#    - docker compose rm daily_planner
-#    - rm -Fo .env-non-dev
-#
-#deploy-job:
-#  stage: deploy
-#  script:
-#    - echo "$ENV_NON_DEV" > .env-non-dev
-#    - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
-#    - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
-#    - docker compose up -d
-#    - rm -Fo .env-non-dev
-#
-#cleanup-job:
-#  stage: cleanup
-#  script:
-#    - echo "$ENV_NON_DEV" > .env-non-dev
-#    - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
-#    - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
-#    - docker compose down
-#    - rm -Fo .env-non-dev
+  script:
+    - docker compose down
