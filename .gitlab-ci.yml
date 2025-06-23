@@ -20,10 +20,8 @@ build-job:
 
 test-job:
   stage: test
-  variables:
-    MODE: "TEST"
   script:
-    - docker run -e MODE=$MODE --rm daily_planner_image pytest -s -v
+    - docker run -e $MODE="TEST" --rm daily_planner_image pytest -s -v
 
 lint-job:
   stage: lint
