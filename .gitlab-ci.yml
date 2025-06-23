@@ -1,9 +1,10 @@
 stages:
   - build
-  - test
+  - run
   - lint
-  - deploy
+  - test
   - cleanup
+  - deploy
 
 before_script:
   - echo "$ENV_NON_DEV" > .env-non-dev
@@ -50,35 +51,51 @@ after_script:
 build-job:
   stage: build
   script:
-    - docker compose build
+    - docker compose -f docker-compose.yaml build
 
-unit-test-job:
-  stage: test
+run-job:
+  stage: run
+  needs: [build-job]
   script:
-    - echo "Начало тестирования"
-    - docker compose run -e MODE=TEST --rm daily_planner pytest -s -v
+    - docker compose -f docker-compose.yaml up -d
 
 lint-test-job:
   stage: lint
+  needs: [run-job]
   script:
-    - docker compose run -d daily_planner
     - echo "Проверка форматирования с помощью black..."
-    - docker compose exec -it daily_planner black --config .black --check .
+    - docker exec -it daily_planner_app black --config .black --check .
     - echo "Статическая проверка типов с помощью pyright..."
-    - docker compose exec -it daily_planner pyright .
+    - docker exec -it daily_planner_app pyright .
     - echo  "Запуск flake8..."
-    - docker compose exec -it daily_planner flake8 .
+    - docker exec -it daily_planner_app flake8 .
     - echo "Проверка порядка импортов с помощью isort..."
-    - docker compose exec -it daily_planner isort --check-only .
-    - docker compose stop daily_planner
-    - docker compose rm daily_planner
+    - docker exec -it daily_planner_app isort --check-only .
 
-deploy-job:
-  stage: deploy
+
+test-job:
+  stage: test
+  needs: [lint-test-job]
   script:
-    - docker compose up -d
+    - echo "Начало тестирования"
+    - docker exec -e MODE=TEST daily_planner_app pytest -s -v
+
 
 cleanup-job:
   stage: cleanup
+  needs: [run-job]
   script:
-    - docker compose down
+    - docker compose -f docker-compose.yaml down
+    - docker container prune -f
+    - docker volume prune -f
+    - docker system prune -f
+  when: always
+
+
+deploy-job:
+  stage: deploy
+  needs: [test-job]
+  script:
+    - docker compose -f docker-compose.yaml build
+    - docker compose -f docker-compose.yaml up -d
+  when: manual
