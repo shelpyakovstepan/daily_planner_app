@@ -21,7 +21,7 @@ build-job:
 test-job:
   stage: test
   script:
-    - docker compose run --env-file .env-non-dev -e MODE=TEST --rm daily_planner_image pytest -s -v
+    - docker compose run -e MODE=TEST --rm daily_planner_image pytest -s -v
 
 lint-job:
   stage: lint
