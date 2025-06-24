@@ -64,7 +64,7 @@ lint-test-job:
   needs: [run-job]
   script:
     - echo "Проверка форматирования с помощью black..."
-    - docker exec daily_planner_app black --config .black --check .
+    - docker exec -it daily_planner_app black --config .black --check .
     #- docker compose -f docker-compose.yaml exec daily_planner black --check --diff --config .black app tests
     - echo "Статическая проверка типов с помощью pyright..."
     - docker exec daily_planner_app pyright .
