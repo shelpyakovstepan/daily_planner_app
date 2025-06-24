@@ -57,7 +57,7 @@ run-job:
   stage: run
   needs: [build-job]
   script:
-    - docker compose -f docker-compose.yaml up
+    - docker compose -f docker-compose.yaml up -d
 
 lint-test-job:
   stage: lint
