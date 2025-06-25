@@ -63,15 +63,18 @@ lint-test-job:
   stage: lint
   needs: [run-job]
   script:
-    - echo "Проверка форматирования с помощью black..."
-    - docker compose exec -T daily_planner black --config .black --check
-    #- docker compose -f docker-compose.yaml exec daily_planner black --check --diff --config .black app tests
-    - echo "Статическая проверка типов с помощью pyright..."
+    - echo "Проверка форматирования кода с помощью black..."
+    - docker compose exec -T daily_planner black --config .black --check .
+
+    - echo "Проверка типов с помощью pyright..."
     - docker exec daily_planner_app pyright .
-    - echo  "Запуск flake8..."
+
+    - echo "Проверка стиля кода с помощью flake8..."
     - docker exec daily_planner_app flake8 .
-    - echo "Проверка порядка импортов с помощью isort..."
-    - docker exec daily_planner_app isort --check-only .
+
+    - echo "Проверка сортировки импортов с помощью isort..."
+    - docker exec daily_planner_app isort --check-only --diff .
+    #- docker compose -f docker-compose.yaml exec daily_planner black --check --diff --config .black app tests
 
 
 test-job:
