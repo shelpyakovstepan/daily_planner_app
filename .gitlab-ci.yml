@@ -52,6 +52,7 @@ build-job:
   stage: build
   script:
     - docker compose -f docker-compose.yaml build
+    - docker compose -f docker-compose.yaml config
 
 run-job:
   stage: run
