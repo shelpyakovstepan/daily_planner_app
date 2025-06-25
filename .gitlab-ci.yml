@@ -52,14 +52,12 @@ build-job:
   stage: build
   script:
     - docker compose -f docker-compose.yaml build
-    - docker compose -f docker-compose.yaml config
 
 run-job:
   stage: run
   needs: [build-job]
   script:
     - docker compose -f docker-compose.yaml up -d
-    - sleep 10
 
 lint-test-job:
   stage: lint
