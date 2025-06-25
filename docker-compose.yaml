@@ -42,7 +42,7 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    command: [ "bash", "/daily_planner/docker/app.sh" ]
+    command: [ "sh", "/daily_planner/docker/app.sh" ]
     ports:
       - 7777:8000
 
@@ -57,7 +57,7 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-    command: [ "bash", "/daily_planner/docker/celery.sh", "celery" ]
+    command: [ "sh", "/daily_planner/docker/celery.sh", "celery" ]
 
   flower:
     image: daily_planner_flower_image
@@ -70,7 +70,7 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-    command: [ "bash", "/daily_planner/docker/celery.sh", "flower" ]
+    command: [ "sh", "/daily_planner/docker/celery.sh", "flower" ]
     ports:
       - 5555:5555
 
