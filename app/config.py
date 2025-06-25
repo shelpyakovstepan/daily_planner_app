@@ -27,11 +27,6 @@ class Settings(BaseSettings):
     RABBIT_HOST: str
     RABBIT_PORT: int
 
-    TEST_RABBIT_USER: str
-    TEST_RABBIT_PASS: str
-    TEST_RABBIT_HOST: str
-    TEST_RABBIT_PORT: int
-
     SMTP_HOST: str
     SMTP_PORT: int
     SMTP_USER: str
