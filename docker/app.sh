@@ -1,4 +1,4 @@
-#!/bin/sh^M
+#!/bin/bash
 
 alembic upgrade head
 
