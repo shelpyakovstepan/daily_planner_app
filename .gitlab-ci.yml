@@ -82,7 +82,7 @@ test-job:
   needs: [lint-test-job]
   script:
     - echo "Начало тестирования"
-    - docker compose exec -e MODE=TEST daily_planner_app pytest -s -v
+    - docker compose exec -e MODE=TEST daily_planner pytest -s -v
 
 
 cleanup-job:
