@@ -58,6 +58,7 @@ run-job:
   needs: [build-job]
   script:
     - docker compose -f docker-compose.yaml up -d
+    - sleep 10
 
 lint-test-job:
   stage: lint
@@ -67,13 +68,13 @@ lint-test-job:
     - docker compose exec -T daily_planner black --config .black --check .
 
     - echo "Проверка типов с помощью pyright..."
-    - docker exec daily_planner_app pyright .
+    - docker compose exec -T daily_planner_app pyright .
 
     - echo "Проверка стиля кода с помощью flake8..."
-    - docker exec daily_planner_app flake8 .
+    - docker compose exec -T daily_planner_app flake8 .
 
     - echo "Проверка сортировки импортов с помощью isort..."
-    - docker exec daily_planner_app isort --check-only --diff .
+    - docker compose exec -T daily_planner_app isort --check-only --diff .
     #- docker compose -f docker-compose.yaml exec daily_planner black --check --diff --config .black app tests
 
 
