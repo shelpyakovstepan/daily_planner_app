@@ -12,7 +12,7 @@ def check_rabbit_connection():
     conn_url = (
         f"amqp://{settings.RABBIT_USER}:{settings.RABBIT_PASS}@"
         f"{settings.RABBIT_HOST}:{settings.RABBIT_PORT}/"
-        )
+    )
     try:
         with Connection(conn_url) as conn:
             conn.connect()
