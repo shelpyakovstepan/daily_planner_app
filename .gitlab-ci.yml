@@ -14,40 +14,7 @@ before_script:
 after_script:
   - rm -Fo .env-non-dev
 
-#build-job:
-#  stage: build
-#  script:
-#    - docker build -t daily_planner_image .
-#
-#test-job:
-#  stage: test
-#  script:
-#    - docker compose run -e MODE=TEST --rm daily_planner_image pytest -s -v
-#
-#lint-job:
-#  stage: lint
-#  script:
-#    - docker run -d daily_planner_image
-#    - echo "Проверка форматирования с помощью black..."
-#    - docker exec -it daily_planner black --config .black --check .
-#    - echo "Статическая проверка типов с помощью pyright..."
-#    - docker compose exec -it daily_planner pyright .
-#    - echo  "Запуск flake8..."
-#    - docker compose exec -it daily_planner flake8 .
-#    - echo "Проверка порядка импортов с помощью isort..."
-#    - docker compose exec -it daily_planner isort --check-only .
-#    - docker stop daily_planner_image
-#    - docker rm daily_planner_image
-#
-#deploy-job:
-#  stage: deploy
-#  script:
-#    - docker compose up -d
-#
-#cleanup-job:
-#  stage: cleanup
-#  script: docker compose down
-#
+
 build-job:
   stage: build
   script:
