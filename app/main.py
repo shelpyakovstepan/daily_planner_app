@@ -5,6 +5,7 @@ from typing import AsyncIterator
 
 # THIRDPARTY
 from fastapi import FastAPI, Request
+from prometheus_fastapi_instrumentator import Instrumentator
 
 # FIRSTPARTY
 from app.database import check_db_connection
@@ -20,6 +21,12 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(lifespan=lifespan)
+
+instrumentator = Instrumentator(
+    should_group_status_codes=False, excluded_handlers=[".*admin.*", "/metrics"]
+)
+
+instrumentator.instrument(app).expose(app)
 
 app.include_router(users_router)
 app.include_router(entries_router)
