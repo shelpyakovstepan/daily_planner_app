@@ -93,6 +93,7 @@ services:
     ports:
       - 3001:3000
 
+
 volumes:
   fastapi_postgres_data:
   grafanadata:
