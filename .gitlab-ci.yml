@@ -52,7 +52,7 @@ test-job:
 
 cleanup-job:
   stage: cleanup
-  needs: [run-job]
+  needs: [run-job, test-job]
   script:
     - docker compose -f docker-compose.yaml down
     - docker container prune -f
