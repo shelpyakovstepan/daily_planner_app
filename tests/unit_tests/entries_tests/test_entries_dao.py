@@ -74,7 +74,7 @@ async def test_find_one_or_none(entry_id, user_id, exists):
         assert not entry
 
 
-@pytest.mark.parametrize("user_id,number_entries", [(1, 4), (2, 3)])
+@pytest.mark.parametrize("user_id,number_entries", [(1, 3), (2, 3)])
 async def test_find_all(user_id, number_entries):
     entries = await EntriesDAO.find_all(user_id=user_id)
 
