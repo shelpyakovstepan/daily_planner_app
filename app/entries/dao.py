@@ -3,7 +3,7 @@ from datetime import date, datetime
 
 # THIRDPARTY
 import pytz
-from sqlalchemy import insert, or_, select, update
+from sqlalchemy import delete, insert, or_, select, update
 
 # FIRSTPARTY
 from app.dao.base import BaseDao
@@ -84,6 +84,7 @@ class EntriesDAO(BaseDao):
                 or_(
                     Entries.status == StatusEnum.WAITING,
                     Entries.status == StatusEnum.WORK,
+                    Entries.status == StatusEnum.EXPIRED,
                 )
             )
 
@@ -120,6 +121,18 @@ class EntriesDAO(BaseDao):
                     )
 
                     await session.execute(update_entry)
+
+                if (
+                    entry.status == StatusEnum.EXPIRED
+                    and (
+                        datetime.now(pytz.timezone("Europe/Moscow")).date()
+                        - datetime.strptime(str(entry.date_end), "%Y-%m-%d").date()
+                    ).days
+                    >= 15
+                ):
+                    delete_entry = delete(Entries).where(Entries.id == entry.id)
+
+                    await session.execute(delete_entry)
 
             await session.commit()
 
