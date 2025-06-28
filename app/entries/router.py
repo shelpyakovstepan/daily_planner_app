@@ -31,7 +31,7 @@ async def add_entry(
     text: str,
     user: Users = Depends(get_current_user),
 ) -> SEntries:
-
+    """Создаёт новую запись."""
     delta = date_end - date_start
     if (
         delta.days <= 0
@@ -58,6 +58,7 @@ async def add_entry(
 async def get_entries(
     user: Users = Depends(get_current_user),
 ) -> List[SEntries]:
+    """Выдаёт все записи пользователя."""
     entries = await EntriesDAO.find_all(user_id=user.id)
     if not entries:
         raise YouDoNotHaveEntriesException
@@ -69,6 +70,7 @@ async def get_entries(
 async def get_entry_by_id(
     entry_id: int, user: Users = Depends(get_current_user)
 ) -> SEntries:
+    """Выдаёт запись пользователя по id."""
     entry = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
     if not entry:
         raise YouDoNotHaveEntryException
@@ -81,6 +83,7 @@ async def get_entries_by_status(
     status: Literal["WAITING", "WORK", "READY", "EXPIRED"],
     user: Users = Depends(get_current_user),
 ) -> List[SEntries]:
+    """Выдаёт все записи пользователя по статусу."""
     entries = await EntriesDAO.find_all(status=status, user_id=user.id)
 
     if not entries:
@@ -96,7 +99,7 @@ async def update_entry(
     text: str,
     user: Users = Depends(get_current_user),
 ) -> SEntries:
-
+    """Обновляет существующую запись."""
     delta = date_end - date_start
     if (
         delta.days < 0
@@ -128,7 +131,7 @@ async def update_entry_status(
     status: Literal["WORK", "READY"],
     user: Users = Depends(get_current_user),
 ) -> SEntries:
-
+    """Обновляет статус существующей записи (WORK/READY)."""
     entry_update = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
     if not entry_update:
         raise YouDoNotHaveEntryException
@@ -141,6 +144,7 @@ async def update_entry_status(
 
 @router.delete("/{entry_id}")
 async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
+    """Удаляет запись."""
     entry_delete = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
     if not entry_delete:
         raise YouDoNotHaveEntryException
@@ -151,4 +155,5 @@ async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
 
 @router.patch("////")
 async def global_update_statuses():
+    """Обновляет или удаляет все записи в зависимости от их статуса и даты."""
     await EntriesDAO.global_update_statuses()

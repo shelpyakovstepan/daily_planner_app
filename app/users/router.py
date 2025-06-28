@@ -25,6 +25,7 @@ router = APIRouter(prefix="/auth", tags=["Аутентификация & Пол�
 
 @router.post("/register")
 async def register(user_data: SUsersAuth):
+    """Создаёт нового пользователя."""
     existing_user = await UserDAO.find_one_or_none(email=user_data.email)
     if existing_user:
         raise UserAlreadyExistsException
@@ -41,6 +42,7 @@ async def register(user_data: SUsersAuth):
 
 @router.post("/login")
 async def login(response: Response, user_data: SUsersAuth):
+    """Логинит пользователя в системе."""
     user = await authenticate_user(user_data.email, user_data.password)
     if not user:
         raise IncorrectUserEmailOrPasswordException
@@ -57,6 +59,7 @@ async def login(response: Response, user_data: SUsersAuth):
 async def change_admin_status(
     user_id: int, admin_status: bool, user: Users = Depends(get_current_user)
 ) -> SUsers:
+    """Изменяет статус админа пользователя."""
     if not user.is_admin:
         raise NotEnoughRightsException
 
@@ -69,10 +72,12 @@ async def change_admin_status(
 
 @router.get("/me")
 async def get_me(user: Users = Depends(get_current_user)):
+    """Выдаёт информацию пользователю о самом себе."""
     return user
 
 
 @router.post("/logout")
-def logout_user(response: Response):
+async def logout_user(response: Response):
+    """Осуществляет выход пользователя из системы"""
     response.delete_cookie("access_token")
     logger.info("User logged out")
