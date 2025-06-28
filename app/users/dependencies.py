@@ -9,11 +9,13 @@ from jose import JWTError, jwt
 from app.config import settings
 from app.exceptions import (
     IncorrectTokenFormatException,
+    NotEnoughRightsException,
     TokenAbsentException,
     TokenExpiredException,
     UserIsNotPresentException,
 )
 from app.users.dao import UserDAO
+from app.users.models import Users
 
 
 def get_token(request: Request):
@@ -39,3 +41,9 @@ async def get_current_user(token: str = Depends(get_token)):
         raise UserIsNotPresentException
 
     return user
+
+
+async def check_admin_status(user: Users = Depends(get_current_user)):
+    if not user.is_admin:
+        raise NotEnoughRightsException
+    return True
