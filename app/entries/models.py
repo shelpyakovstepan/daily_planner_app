@@ -3,7 +3,7 @@ from datetime import date
 import enum
 
 # THIRDPARTY
-from sqlalchemy import Column, Date, ForeignKey, Integer, Text
+from sqlalchemy import ForeignKey, Text
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
