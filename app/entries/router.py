@@ -111,6 +111,12 @@ async def update_entry(
     if not entry_update:
         raise YouDoNotHaveEntryException
 
+    if (
+        entry_update.status == StatusEnum.EXPIRED
+        or entry_update.status == StatusEnum.READY
+    ):
+        raise YouCanNotUpdateEntryException
+
     entry = await EntriesDAO.update(
         entry_id, date_start=date_start, date_end=date_end, text=text
     )
