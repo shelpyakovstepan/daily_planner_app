@@ -4,14 +4,14 @@
     "date_start": "2025-06-18",
     "date_end": "2100-07-18",
     "text": "Заметка на месяц, ожидается waiting",
-    "status": "WAITING"
+    "status": "WORK"
   },
   {
     "user_id": 1,
     "date_start": "2025-06-18",
     "date_end": "2100-06-21",
     "text": "финальное изменение",
-    "status": "WAITING"
+    "status": "WORK"
   },
   {
     "user_id": 1,

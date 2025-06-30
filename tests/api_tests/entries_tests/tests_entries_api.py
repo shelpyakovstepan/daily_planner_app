@@ -47,8 +47,8 @@ async def test_get_entry_by_id(authenticated_ac: AsyncClient, entry_id, status_c
     "status,entries_number,status_code",
     [
         ("some_wrong_status", 1, 422),
-        ("WORK", 2, 200),
-        ("WAITING", 2, 200),
+        ("WORK", 4, 200),
+        ("WAITING", 1, 409),
         ("READY", 1, 409),
         ("EXPIRED", 1, 200),
     ],

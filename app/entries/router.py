@@ -8,14 +8,16 @@ import pytz
 
 # FIRSTPARTY
 from app.entries.dao import EntriesDAO
+from app.entries.models import StatusEnum
 from app.entries.schemas import SEntries
+from app.entries.utils import check_delta_days, check_availability_by_date_end
 from app.exceptions import (
     NotAddEntryException,
     NotTrueTimeException,
     NotUpdateEntryException,
     TextIsTooBigException,
     YouDoNotHaveEntriesException,
-    YouDoNotHaveEntryException,
+    YouDoNotHaveEntryException, YouCanNotUpdateEntryException,
 )
 from app.logger import logger
 from app.users.dependencies import get_current_user
@@ -32,11 +34,9 @@ async def add_entry(
     user: Users = Depends(get_current_user),
 ) -> SEntries:
     """Создаёт новую запись."""
-    delta = date_end - date_start
     if (
-        delta.days <= 0
-        or datetime.now(pytz.timezone("Europe/Moscow")).date()
-        >= datetime.strptime(str(date_end), "%Y-%m-%d").date()
+        check_delta_days(date_start, date_end)
+        or check_availability_by_date_end(date_end)
     ):
         raise NotTrueTimeException
 
@@ -100,11 +100,9 @@ async def update_entry(
     user: Users = Depends(get_current_user),
 ) -> SEntries:
     """Обновляет существующую запись."""
-    delta = date_end - date_start
     if (
-        delta.days < 0
-        or datetime.now(pytz.timezone("Europe/Moscow")).date()
-        >= datetime.strptime(str(date_end), "%Y-%m-%d").date()
+        check_delta_days(date_start, date_end)
+        or check_availability_by_date_end(date_end)
     ):
         raise NotTrueTimeException
 
@@ -135,6 +133,12 @@ async def update_entry_status(
     entry_update = await EntriesDAO.find_one_or_none(id=entry_id, user_id=user.id)
     if not entry_update:
         raise YouDoNotHaveEntryException
+
+    if entry_update.status == StatusEnum.EXPIRED or entry_update.status == StatusEnum.WAITING:
+        raise YouCanNotUpdateEntryException
+
+    if check_availability_by_date_end(entry_update.date_end):
+        raise NotTrueTimeException
 
     status_update = await EntriesDAO.update_one(entry_id, status=status)
 
