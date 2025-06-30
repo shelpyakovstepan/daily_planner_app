@@ -79,3 +79,6 @@ async def test_find_all(user_id, number_entries):
     entries = await EntriesDAO.find_all(user_id=user_id)
 
     assert len(entries) == number_entries
+
+
+# pyright: reportOptionalMemberAccess=false

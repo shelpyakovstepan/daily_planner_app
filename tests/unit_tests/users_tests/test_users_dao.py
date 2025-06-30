@@ -21,3 +21,6 @@ async def test_find_by_id(user_id, email, exists):
         assert user.email == email
     else:
         assert not user
+
+
+# pyright: reportOptionalMemberAccess=false
