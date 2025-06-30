@@ -9,8 +9,11 @@ from sqlalchemy import delete, insert, select, update
 from app.dao.base import BaseDao
 from app.database import async_session_maker
 from app.entries.models import Entries, StatusEnum
-from app.entries.utils import check_availability_by_date_start_before_date_now, check_availability_by_date_end, \
-    check_availability_by_date_start_after_date_now
+from app.entries.utils import (
+    check_availability_by_date_end,
+    check_availability_by_date_start_after_date_now,
+    check_availability_by_date_start_before_date_now,
+)
 
 
 class EntriesDAO(BaseDao):
@@ -78,7 +81,9 @@ class EntriesDAO(BaseDao):
             for entry in all_entries:
                 if (
                     entry.status == StatusEnum.WAITING
-                    and check_availability_by_date_start_before_date_now(entry.date_start)
+                    and check_availability_by_date_start_before_date_now(
+                        entry.date_start
+                    )
                 ):
                     update_entry = (
                         update(Entries)
@@ -88,9 +93,8 @@ class EntriesDAO(BaseDao):
 
                     await session.execute(update_entry)
 
-                if (
-                    entry.status == StatusEnum.WORK
-                    and check_availability_by_date_end(entry.date_end)
+                if entry.status == StatusEnum.WORK and check_availability_by_date_end(
+                    entry.date_end
                 ):
                     update_entry = (
                         update(Entries)

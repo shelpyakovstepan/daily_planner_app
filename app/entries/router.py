@@ -1,23 +1,23 @@
 # STDLIB
-from datetime import date, datetime
+from datetime import date
 from typing import List, Literal
 
 # THIRDPARTY
 from fastapi import APIRouter, Depends
-import pytz
 
 # FIRSTPARTY
 from app.entries.dao import EntriesDAO
 from app.entries.models import StatusEnum
 from app.entries.schemas import SEntries
-from app.entries.utils import check_delta_days, check_availability_by_date_end
+from app.entries.utils import check_availability_by_date_end, check_delta_days
 from app.exceptions import (
     NotAddEntryException,
     NotTrueTimeException,
     NotUpdateEntryException,
     TextIsTooBigException,
+    YouCanNotUpdateEntryException,
     YouDoNotHaveEntriesException,
-    YouDoNotHaveEntryException, YouCanNotUpdateEntryException,
+    YouDoNotHaveEntryException,
 )
 from app.logger import logger
 from app.users.dependencies import get_current_user
@@ -34,9 +34,8 @@ async def add_entry(
     user: Users = Depends(get_current_user),
 ) -> SEntries:
     """Создаёт новую запись."""
-    if (
-        check_delta_days(date_start, date_end)
-        or check_availability_by_date_end(date_end)
+    if check_delta_days(date_start, date_end) or check_availability_by_date_end(
+        date_end
     ):
         raise NotTrueTimeException
 
@@ -100,9 +99,8 @@ async def update_entry(
     user: Users = Depends(get_current_user),
 ) -> SEntries:
     """Обновляет существующую запись."""
-    if (
-        check_delta_days(date_start, date_end)
-        or check_availability_by_date_end(date_end)
+    if check_delta_days(date_start, date_end) or check_availability_by_date_end(
+        date_end
     ):
         raise NotTrueTimeException
 
@@ -134,7 +132,10 @@ async def update_entry_status(
     if not entry_update:
         raise YouDoNotHaveEntryException
 
-    if entry_update.status == StatusEnum.EXPIRED or entry_update.status == StatusEnum.WAITING:
+    if (
+        entry_update.status == StatusEnum.EXPIRED
+        or entry_update.status == StatusEnum.WAITING
+    ):
         raise YouCanNotUpdateEntryException
 
     if check_availability_by_date_end(entry_update.date_end):
@@ -161,3 +162,5 @@ async def delete_entry(entry_id: int, user: Users = Depends(get_current_user)):
 async def global_update_statuses():
     """Обновляет или удаляет все записи в зависимости от их статуса и даты."""
     await EntriesDAO.global_update_statuses()
+
+# pyright: reportReturnType=false
