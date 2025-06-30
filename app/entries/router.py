@@ -163,4 +163,5 @@ async def global_update_statuses():
     """Обновляет или удаляет все записи в зависимости от их статуса и даты."""
     await EntriesDAO.global_update_statuses()
 
+
 # pyright: reportReturnType=false
