@@ -3,7 +3,7 @@ from datetime import date, datetime
 
 # THIRDPARTY
 import pytz
-from sqlalchemy import delete, insert, or_, select, update
+from sqlalchemy import delete, insert, select, update
 
 # FIRSTPARTY
 from app.dao.base import BaseDao
@@ -80,22 +80,12 @@ class EntriesDAO(BaseDao):
     @classmethod
     async def global_update_statuses(cls):
         async with async_session_maker() as session:
-            all_entries_with_work_or_waiting_statuses = select(Entries).where(
-                or_(
-                    Entries.status == StatusEnum.WAITING,
-                    Entries.status == StatusEnum.WORK,
-                    Entries.status == StatusEnum.EXPIRED,
-                )
-            )
+            all_entries = select(Entries)
 
-            all_entries_with_work_or_waiting_statuses = await session.execute(
-                all_entries_with_work_or_waiting_statuses
-            )
-            all_entries_with_work_or_waiting_statuses = (
-                all_entries_with_work_or_waiting_statuses.scalars().all()
-            )
+            all_entries = await session.execute(all_entries)
+            all_entries = all_entries.scalars().all()
 
-            for entry in all_entries_with_work_or_waiting_statuses:
+            for entry in all_entries:
                 if (
                     entry.status == StatusEnum.WAITING
                     and datetime.strptime(str(entry.date_start), "%Y-%m-%d").date()
@@ -123,7 +113,7 @@ class EntriesDAO(BaseDao):
                     await session.execute(update_entry)
 
                 if (
-                    entry.status == StatusEnum.EXPIRED
+                    entry.status in (StatusEnum.EXPIRED, StatusEnum.READY)
                     and (
                         datetime.now(pytz.timezone("Europe/Moscow")).date()
                         - datetime.strptime(str(entry.date_end), "%Y-%m-%d").date()
