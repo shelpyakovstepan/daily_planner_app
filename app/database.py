@@ -1,7 +1,11 @@
 # THIRDPARTY
 from sqlalchemy import NullPool, text
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 # FIRSTPARTY
 from app.config import settings
@@ -24,10 +28,8 @@ else:
 
 engine = create_async_engine(DATABASE_URL, **DATABASE_PARAMS)
 
-async_session_maker = sessionmaker(
-    engine,  # pyright: ignore [reportCallIssue, reportArgumentType]
-    class_=AsyncSession,
-    expire_on_commit=False,  # pyright: ignore [reportCallIssue, reportArgumentType]
+async_session_maker = async_sessionmaker(
+    bind=engine, class_=AsyncSession, expire_on_commit=False
 )
 
 
