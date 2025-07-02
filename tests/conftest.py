@@ -44,15 +44,9 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
             await t_session.rollback()
 
 
-# @pytest.fixture
-# def mock_session() -> AsyncMock:
-#    """Фикстура для создания мок-сессии."""
-#    return AsyncMock(spec=AsyncSession)
-
-
 @pytest.fixture(scope="function", autouse=True)
 async def create_users(
-    get_session: AsyncSession,  # noqa: F811
+    get_session: AsyncSession,
 ) -> AsyncGenerator[List[Users], None]:
     """Фикстура для создания тестового пользователя в БД.
 
@@ -63,16 +57,6 @@ async def create_users(
         Users: Экземпляр модели Users, представляющий созданного
         пользователя
     """
-    # id_ = 1245
-    # email = "user@example.com"
-    # hashed_password = "$2b$12$pzW2JBdkHmP8yYdq.m4t0OICxBbSjyTA08dLbSzawG.FWqQiYTdqu"
-    # is_admin = False
-    # user = Users(
-    #    id=id_,
-    #    email=email,
-    #    hashed_password=hashed_password,
-    #    is_admin=is_admin
-    # )
     users = open_mock_json("users")
     users_list = []
     for user in users:
@@ -112,18 +96,6 @@ async def create_entries(
        Entries: Экземпляр модели Entries, представляющий
        созданную активность
     """
-    # user_id = 12345
-    # date_start = "2025-06-18"
-    # date_end = "2100-07-18"
-    # text = "Тестовая заметка"
-    # status = StatusEnum.WORK
-    # entry = Entries(
-    #    user_id=user_id,
-    #    date_start=datetime.strptime(date_start, "%Y-%m-%d"),
-    #    date_end=datetime.strptime(date_end, "%Y-%m-%d"),
-    #    text=text,
-    #    status=status
-    # )
     entries = open_mock_json("entries")
     entries_list = []
     for entry in entries:
@@ -147,7 +119,7 @@ async def create_entries(
 
     for entry in entries_list:
         query = delete(Entries).where(
-            and_(  # noqa: FKA100
+            and_(
                 Entries.id == entry.id,
                 Entries.user_id == entry.user_id,
                 Entries.date_start == entry.date_start,

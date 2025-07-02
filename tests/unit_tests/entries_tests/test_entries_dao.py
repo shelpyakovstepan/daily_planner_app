@@ -9,20 +9,20 @@ from app.entries.dao import EntriesDAO
 
 
 class TestEntriesDAO:
-    # @pytest.mark.parametrize(
-    #    "user_id,date_start,date_end,text",
-    #    [
-    #        (1, "2025-06-10", "2100-06-20", "test"),
-    #        (2, "2025-06-10", "2100-06-20", "test"),
-    #    ],
-    # )
-    # async def test_add(self, user_id, date_start, date_end, text):
-    #    date_start = datetime.strptime(date_start, "%Y-%m-%d").date()
-    #    date_end = datetime.strptime(date_end, "%Y-%m-%d").date()
-    #
-    #    entry = await EntriesDAO.add(user_id, date_start, date_end, text)
-    #
-    #    assert entry is not None
+    @pytest.mark.parametrize(
+        "user_id,date_start,date_end,text",
+        [
+            (11111, "2025-06-10", "2100-06-20", "test"),
+            (22222, "2025-06-10", "2100-06-20", "test"),
+        ],
+    )
+    async def test_add(self, user_id, date_start, date_end, text):
+        date_start = datetime.strptime(date_start, "%Y-%m-%d").date()
+        date_end = datetime.strptime(date_end, "%Y-%m-%d").date()
+
+        entry = await EntriesDAO.add(user_id, date_start, date_end, text)
+
+        assert entry is not None
 
     @pytest.mark.parametrize(
         "entry_id,date_start,date_end,text",
