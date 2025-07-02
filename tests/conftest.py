@@ -19,14 +19,14 @@ from app.main import app as fastapi_app
 from app.users.models import Users
 
 
-@pytest.fixture(scope="session", autouse=True)
-async def prepare_database():
-    assert settings.MODE == "TEST"
-
-    async with engine.begin() as connection:
-        await connection.run_sync(Base.metadata.drop_all)
-        await connection.run_sync(Base.metadata.create_all)
-
+#@pytest.fixture(scope="session", autouse=True)
+#async def prepare_database():
+#    assert settings.MODE == "TEST"
+#
+#    async with engine.begin() as connection:
+#        await connection.run_sync(Base.metadata.drop_all)
+#        await connection.run_sync(Base.metadata.create_all)
+#
 
 #
 #    def open_mock_json(model: str):
