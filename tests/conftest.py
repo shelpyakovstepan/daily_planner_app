@@ -12,15 +12,13 @@ from sqlalchemy import and_, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # FIRSTPARTY
-from app.config import settings
-from app.database import Base, async_session_maker, engine
+from app.database import async_session_maker
 from app.entries.models import Entries
 from app.main import app as fastapi_app
 from app.users.models import Users
 
-
-#@pytest.fixture(scope="session", autouse=True)
-#async def prepare_database():
+# @pytest.fixture(scope="session", autouse=True)
+# async def prepare_database():
 #    assert settings.MODE == "TEST"
 #
 #    async with engine.begin() as connection:
