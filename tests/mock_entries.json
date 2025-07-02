@@ -1,12 +1,14 @@
 [
   {
+    "id": 4,
     "user_id": 1,
     "date_start": "2025-06-18",
     "date_end": "2100-07-18",
-    "text": "Заметка на месяц, ожидается waiting",
+    "text": "Заметка",
     "status": "WORK"
   },
   {
+    "id": 5,
     "user_id": 1,
     "date_start": "2025-06-18",
     "date_end": "2100-06-21",
@@ -14,6 +16,7 @@
     "status": "WORK"
   },
   {
+    "id": 6,
     "user_id": 1,
     "date_start": "2025-06-11",
     "date_end": "2025-06-12",
@@ -21,6 +24,7 @@
     "status": "EXPIRED"
   },
   {
+    "id": 7,
     "user_id": 1,
     "date_start": "2025-06-10",
     "date_end": "2100-06-20",
@@ -28,6 +32,7 @@
     "status": "WORK"
   },
   {
+    "id": 8,
     "user_id": 2,
     "date_start": "2025-06-10",
     "date_end": "2100-06-20",
@@ -35,6 +40,7 @@
     "status": "WORK"
   },
   {
+    "id": 9,
     "user_id": 2,
     "date_start": "2025-06-09",
     "date_end": "2100-06-19",
@@ -42,6 +48,7 @@
     "status": "WORK"
   },
   {
+    "id": 10,
     "user_id": 2,
     "date_start": "2025-06-09",
     "date_end": "2100-06-19",

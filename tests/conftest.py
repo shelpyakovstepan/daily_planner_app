@@ -1,12 +1,15 @@
 # STDLIB
 from datetime import datetime
 import json
+from typing import AsyncGenerator, List
+from unittest.mock import AsyncMock
 
 # THIRDPARTY
 import httpx
 from httpx import AsyncClient
 import pytest
-from sqlalchemy import insert
+from sqlalchemy import and_, delete
+from sqlalchemy.ext.asyncio import AsyncSession
 
 # FIRSTPARTY
 from app.config import settings
@@ -24,25 +27,162 @@ async def prepare_database():
         await connection.run_sync(Base.metadata.drop_all)
         await connection.run_sync(Base.metadata.create_all)
 
-    def open_mock_json(model: str):
-        with open(f"tests/mock_{model}.json", "r", encoding="utf-8") as file:
-            return json.load(file)
 
+#
+#    def open_mock_json(model: str):
+#        with open(f"tests/mock_{model}.json", "r", encoding="utf-8") as file:
+#            return json.load(file)
+#
+#    users = open_mock_json("users")
+#    entries = open_mock_json("entries")
+#
+#    for entry in entries:
+#        entry["date_start"] = datetime.strptime(entry["date_start"], "%Y-%m-%d")
+#        entry["date_end"] = datetime.strptime(entry["date_end"], "%Y-%m-%d")
+#
+#   async with async_session_maker() as session:
+#        add_users = insert(Users).values(users)
+#        add_entries = insert(Entries).values(entries)
+#
+#        await session.execute(add_users)
+#        await session.execute(add_entries)
+# await session.commit()
+
+
+def open_mock_json(model: str):
+    with open(f"tests/mock_{model}.json", "r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+@pytest.fixture(scope="function")
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    """Фикстура для создания экземпляра сессии базы данных для тестов.
+
+    Yields:
+        AsyncSession: Асинхронная сессия SQLAlchemy для проведения тестов.
+    """
+    test_session = async_session_maker
+    async with test_session() as t_session:
+        try:
+            yield t_session
+        finally:
+            await t_session.rollback()
+
+
+@pytest.fixture
+def mock_session() -> AsyncMock:
+    """Фикстура для создания мок-сессии."""
+    return AsyncMock(spec=AsyncSession)
+
+
+@pytest.fixture(scope="function", autouse=True)
+async def create_users(
+    get_session: AsyncSession,  # noqa: F811
+) -> AsyncGenerator[List[Users], None]:
+    """Фикстура для создания тестового пользователя в БД.
+
+    Args:
+        get_session (AsyncSession): Асинхронная сессия базы данных
+
+    Returns:
+        Users: Экземпляр модели Users, представляющий созданного
+        пользователя
+    """
+    # id_ = 1245
+    # email = "user@example.com"
+    # hashed_password = "$2b$12$pzW2JBdkHmP8yYdq.m4t0OICxBbSjyTA08dLbSzawG.FWqQiYTdqu"
+    # is_admin = False
+    # user = Users(
+    #    id=id_,
+    #    email=email,
+    #    hashed_password=hashed_password,
+    #    is_admin=is_admin
+    # )
     users = open_mock_json("users")
-    entries = open_mock_json("entries")
+    users_list = []
+    for user in users:
+        user = Users(
+            id=user["id"],
+            email=user["email"],
+            hashed_password=user["hashed_password"],
+            is_admin=user["is_admin"],
+        )
+        users_list.append(user)
 
+    get_session.add_all(users_list)
+    await get_session.commit()
+
+    yield users_list
+
+    for user in users_list:
+        query = delete(Entries).where(Entries.user_id == user.id)
+        await get_session.execute(query)
+        await get_session.commit()
+        await get_session.delete(user)
+        await get_session.commit()
+
+
+@pytest.fixture(scope="function", autouse=True)
+async def create_entries(
+    get_session: AsyncSession, create_users: List[Users]  # noqa: F811
+) -> AsyncGenerator[List[Entries], None]:
+    """Фикстура для создания тестовой активности в БД.
+
+    Args:
+       get_session: Асинхронная сессия базы данных
+       create_users: Экземпляр модели UsersModel
+
+    Returns:
+       Entries: Экземпляр модели Entries, представляющий
+       созданную активность
+    """
+    # user_id = 12345
+    # date_start = "2025-06-18"
+    # date_end = "2100-07-18"
+    # text = "Тестовая заметка"
+    # status = StatusEnum.WORK
+    # entry = Entries(
+    #    user_id=user_id,
+    #    date_start=datetime.strptime(date_start, "%Y-%m-%d"),
+    #    date_end=datetime.strptime(date_end, "%Y-%m-%d"),
+    #    text=text,
+    #    status=status
+    # )
+    entries = open_mock_json("entries")
+    entries_list = []
     for entry in entries:
         entry["date_start"] = datetime.strptime(entry["date_start"], "%Y-%m-%d")
         entry["date_end"] = datetime.strptime(entry["date_end"], "%Y-%m-%d")
 
-    async with async_session_maker() as session:
-        add_users = insert(Users).values(users)
-        add_entries = insert(Entries).values(entries)
+        entry = Entries(
+            id=entry["id"],
+            user_id=entry["user_id"],
+            date_start=entry["date_start"],
+            date_end=entry["date_end"],
+            text=entry["text"],
+            status=entry["status"],
+        )
+        entries_list.append(entry)
 
-        await session.execute(add_users)
-        await session.execute(add_entries)
+    get_session.add_all(entries_list)
+    await get_session.commit()
 
-        await session.commit()
+    yield entries_list
+
+    for entry in entries_list:
+        query = delete(Entries).where(
+            and_(  # noqa: FKA100
+                Entries.id == entry.id,
+                Entries.user_id == entry.user_id,
+                Entries.date_start == entry.date_start,
+                Entries.date_end == entry.date_end,
+                Entries.text == entry.text,
+                Entries.status == entry.status,
+            )
+        )
+
+        await get_session.execute(query)
+        await get_session.commit()
 
 
 @pytest.fixture(scope="function")
@@ -74,7 +214,7 @@ async def authenticated_ac_admin():
         await ac.post(
             "/auth/login",
             json={
-                "email": "step3210shelpyakov@gmail.com",
+                "email": "test@test.com",
                 "password": "kolobok",
             },
         )
