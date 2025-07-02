@@ -17,6 +17,8 @@ after_script:
 
 build-job:
   stage: build
+  environment:
+    name: dev
   script:
     - docker compose -f docker-compose.yaml build
 

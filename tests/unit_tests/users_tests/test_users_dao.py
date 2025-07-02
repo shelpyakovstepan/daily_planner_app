@@ -5,17 +5,13 @@ import pytest
 from app.users.dao import UserDAO
 
 
-@pytest.mark.asyncio
-@pytest.mark.usefixtures(
-    "get_session", "mock_session", "create_users", "create_entries"
-)
 class TestUsersDAO:
     @pytest.mark.parametrize(
         "user_id,email,exists",
         [
-            (1, "user@example.com", True),
-            (2, "test@test.com", True),
-            (100, "not@exists.com", False),
+            (11111, "user@example.com", True),
+            (22222, "test@test.com", True),
+            (1000000, "not@exists.com", False),
         ],
     )
     async def test_find_by_id(self, user_id, email, exists):

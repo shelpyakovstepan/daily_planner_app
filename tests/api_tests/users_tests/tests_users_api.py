@@ -3,10 +3,6 @@ from httpx import AsyncClient
 import pytest
 
 
-@pytest.mark.asyncio
-@pytest.mark.usefixtures(
-    "get_session", "mock_session", "create_users", "create_entries"
-)
 class TestUsersApi:
     @pytest.mark.parametrize(
         "email,password,status_code",
@@ -42,7 +38,7 @@ class TestUsersApi:
 
     @pytest.mark.parametrize(
         "user_id,admin_status,status_code_for_non_admin,status_code_for_admin",
-        [(1, True, 403, 200)],
+        [(11111, True, 403, 200)],
     )
     async def test_change_admin_status(
         self,

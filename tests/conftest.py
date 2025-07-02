@@ -2,7 +2,6 @@
 from datetime import datetime
 import json
 from typing import AsyncGenerator, List
-from unittest.mock import AsyncMock
 
 # THIRDPARTY
 import httpx
@@ -19,32 +18,10 @@ from app.users.models import Users
 
 # @pytest.fixture(scope="session", autouse=True)
 # async def prepare_database():
-#    assert settings.MODE == "TEST"
-#
-#    async with engine.begin() as connection:
-#        await connection.run_sync(Base.metadata.drop_all)
-#        await connection.run_sync(Base.metadata.create_all)
-#
-
-#
-#    def open_mock_json(model: str):
-#        with open(f"tests/mock_{model}.json", "r", encoding="utf-8") as file:
-#            return json.load(file)
-#
-#    users = open_mock_json("users")
-#    entries = open_mock_json("entries")
-#
-#    for entry in entries:
-#        entry["date_start"] = datetime.strptime(entry["date_start"], "%Y-%m-%d")
-#        entry["date_end"] = datetime.strptime(entry["date_end"], "%Y-%m-%d")
-#
-#   async with async_session_maker() as session:
-#        add_users = insert(Users).values(users)
-#        add_entries = insert(Entries).values(entries)
-#
-#        await session.execute(add_users)
-#        await session.execute(add_entries)
-# await session.commit()
+#   assert settings.MODE == "TEST"
+#   async with engine.begin() as connection:
+#       await connection.run_sync(Base.metadata.drop_all)
+#       await connection.run_sync(Base.metadata.create_all)
 
 
 def open_mock_json(model: str):
@@ -67,10 +44,10 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
             await t_session.rollback()
 
 
-@pytest.fixture
-def mock_session() -> AsyncMock:
-    """Фикстура для создания мок-сессии."""
-    return AsyncMock(spec=AsyncSession)
+# @pytest.fixture
+# def mock_session() -> AsyncMock:
+#    """Фикстура для создания мок-сессии."""
+#    return AsyncMock(spec=AsyncSession)
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -116,7 +93,8 @@ async def create_users(
         query = delete(Entries).where(Entries.user_id == user.id)
         await get_session.execute(query)
         await get_session.commit()
-        await get_session.delete(user)
+        query = delete(Users).where(Users.id == user.id)
+        await get_session.execute(query)
         await get_session.commit()
 
 

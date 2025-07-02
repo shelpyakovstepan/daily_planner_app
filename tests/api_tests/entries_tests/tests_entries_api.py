@@ -3,10 +3,6 @@ from httpx import AsyncClient
 import pytest
 
 
-@pytest.mark.asyncio
-@pytest.mark.usefixtures(
-    "get_session", "mock_session", "create_users", "create_entries"
-)
 class TestEntriesApi:
     @pytest.mark.parametrize(
         "date_start,date_end,text,status_code",
@@ -39,7 +35,7 @@ class TestEntriesApi:
 
     @pytest.mark.parametrize(
         "entry_id,status_code",
-        [(4, 200), (5, 200), (8, 409), (1000, 409), ("one", 422)],
+        [(44444, 200), (55555, 200), (88888, 409), (100000000, 409), ("one", 422)],
     )
     async def test_get_entry_by_id(
         self, authenticated_ac: AsyncClient, entry_id, status_code
@@ -71,14 +67,14 @@ class TestEntriesApi:
     @pytest.mark.parametrize(
         "entry_id,date_start,date_end,text,status_code",
         [
-            (1, "2025-06-10", "2025-06-10", "test", 400),
-            (1, "2025-06-10", "2025-06-09", "test", 400),
-            (1, "2025-06-10", "2025-06-11", "test", 400),
-            (1000, "2025-06-10", "2100-06-11", "test", 409),
-            (1, "fddffd", "dfdgdf", "test", 422),
-            (4, "2025-06-10", "2100-06-10", "test", 200),
-            (4, "2025-06-10", "2100-06-10", "test", 200),
-            (4, "2025-06-11", "2200-06-10", "test_test", 200),
+            (11111, "2025-06-10", "2025-06-10", "test", 400),
+            (11111, "2025-06-10", "2025-06-09", "test", 400),
+            (11111, "2025-06-10", "2025-06-11", "test", 400),
+            (1000000000, "2025-06-10", "2100-06-11", "test", 409),
+            (11111, "fddffd", "dfdgdf", "test", 422),
+            (44444, "2025-06-10", "2100-06-10", "test", 200),
+            (44444, "2025-06-10", "2100-06-10", "test", 200),
+            (44444, "2025-06-11", "2200-06-10", "test_test", 200),
         ],
     )
     async def test_update_entry(
@@ -105,13 +101,13 @@ class TestEntriesApi:
     @pytest.mark.parametrize(
         "entry_id,status,status_code",
         [
-            (4, "READY", 200),
-            (1000, "READY", 409),
+            (44444, "READY", 200),
+            (1000000000, "READY", 409),
             ("one", "READY", 422),
-            (4, "EXPIRED", 422),
-            (4, "WAITING", 422),
-            (4, "some_wrong_status", 422),
-            (4, "WORK", 200),
+            (44444, "EXPIRED", 422),
+            (44444, "WAITING", 422),
+            (44444, "some_wrong_status", 422),
+            (44444, "WORK", 200),
         ],
     )
     async def test_update_entry_status(
@@ -124,7 +120,8 @@ class TestEntriesApi:
         assert response.status_code == status_code
 
     @pytest.mark.parametrize(
-        "entry_id,status_code", [(1000, 409), (11, 409), ("one", 422), (4, 200)]
+        "entry_id,status_code",
+        [(100000000, 409), (12222, 409), ("one", 422), (44444, 200)],
     )
     async def test_delete_entry(
         self, authenticated_ac: AsyncClient, entry_id, status_code
