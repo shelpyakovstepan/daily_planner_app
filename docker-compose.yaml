@@ -35,8 +35,8 @@ services:
       context: .
     container_name: daily_planner_app
     restart: always
-    #env_file:
-    #  - dev
+    env_file:
+      - "$dev"
     depends_on:
       db:
         condition: service_healthy
