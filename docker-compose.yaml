@@ -34,6 +34,8 @@ services:
     build:
       context: .
     container_name: daily_planner_app
+    environment:
+      .env-non-dev: "${ENV_NON_DEV}"
     restart: always
     depends_on:
       db:
