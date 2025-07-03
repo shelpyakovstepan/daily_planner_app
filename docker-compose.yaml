@@ -8,7 +8,7 @@ services:
       timeout: 5s
       retries: 3
     env_file:
-      - .env-non-dev
+      - dev
     ports:
       - 5432:5432
     volumes:
@@ -24,7 +24,7 @@ services:
       retries: 3
     hostname: rabbitmq
     env_file:
-      - .env-non-dev
+      - dev
     ports:
       - 5672:5672
       - 15672:15672
@@ -36,7 +36,7 @@ services:
     container_name: daily_planner_app
     restart: always
     env_file:
-      - .env-non-dev
+      - dev
     depends_on:
       db:
         condition: service_healthy
@@ -53,7 +53,7 @@ services:
     container_name: daily_planner_celery
     restart: always
     env_file:
-      - .env-non-dev
+      - dev
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -66,7 +66,7 @@ services:
     container_name: daily_planner_flower
     restart: always
     env_file:
-      - .env-non-dev
+      - dev
     depends_on:
       rabbitmq:
         condition: service_healthy
