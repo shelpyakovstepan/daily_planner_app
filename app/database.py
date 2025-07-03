@@ -1,5 +1,5 @@
 # THIRDPARTY
-from sqlalchemy import text, NullPool
+from sqlalchemy import NullPool, text
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
