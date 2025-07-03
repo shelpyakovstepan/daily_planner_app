@@ -77,3 +77,8 @@ class NotEnoughRightsException(BaseAppException):
 class NotUserException(BaseAppException):
     status_code = status.HTTP_409_CONFLICT
     detail = "Not user"
+
+
+class YouCanNotUpdateEntryException(BaseAppException):
+    status_code = status.HTTP_409_CONFLICT
+    detail = "You can't update entry"

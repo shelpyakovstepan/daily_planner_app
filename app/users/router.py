@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, Response
 # FIRSTPARTY
 from app.exceptions import (
     IncorrectUserEmailOrPasswordException,
-    NotEnoughRightsException,
     NotUserException,
     UserAlreadyExistsException,
 )
@@ -16,7 +15,7 @@ from app.users.auth import (
     get_password_hash,
 )
 from app.users.dao import UserDAO
-from app.users.dependencies import get_current_user
+from app.users.dependencies import check_admin_status, get_current_user
 from app.users.models import Users
 from app.users.schemas import SUsers, SUsersAuth
 
@@ -25,6 +24,7 @@ router = APIRouter(prefix="/auth", tags=["Аутентификация & Пол�
 
 @router.post("/register")
 async def register(user_data: SUsersAuth):
+    """Создаёт нового пользователя."""
     existing_user = await UserDAO.find_one_or_none(email=user_data.email)
     if existing_user:
         raise UserAlreadyExistsException
@@ -41,6 +41,7 @@ async def register(user_data: SUsersAuth):
 
 @router.post("/login")
 async def login(response: Response, user_data: SUsersAuth):
+    """Логинит пользователя в системе."""
     user = await authenticate_user(user_data.email, user_data.password)
     if not user:
         raise IncorrectUserEmailOrPasswordException
@@ -53,13 +54,9 @@ async def login(response: Response, user_data: SUsersAuth):
     return {"access_token": access_token}
 
 
-@router.patch("/admin")
-async def change_admin_status(
-    user_id: int, admin_status: bool, user: Users = Depends(get_current_user)
-) -> SUsers:
-    if not user.is_admin:
-        raise NotEnoughRightsException
-
+@router.patch("/admin", dependencies=[Depends(check_admin_status)])
+async def change_admin_status(user_id: int, admin_status: bool) -> SUsers:
+    """Изменяет статус админа пользователя."""
     user = await UserDAO.update_one(user_id, is_admin=admin_status)
     if not user:
         raise NotUserException
@@ -69,10 +66,12 @@ async def change_admin_status(
 
 @router.get("/me")
 async def get_me(user: Users = Depends(get_current_user)):
+    """Выдаёт информацию пользователю о самом себе."""
     return user
 
 
 @router.post("/logout")
-def logout_user(response: Response):
+async def logout_user(response: Response):
+    """Осуществляет выход пользователя из системы"""
     response.delete_cookie("access_token")
     logger.info("User logged out")

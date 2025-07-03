@@ -3,12 +3,17 @@ from datetime import date, datetime
 
 # THIRDPARTY
 import pytz
-from sqlalchemy import delete, insert, or_, select, update
+from sqlalchemy import delete, insert, select, update
 
 # FIRSTPARTY
 from app.dao.base import BaseDao
 from app.database import async_session_maker
 from app.entries.models import Entries, StatusEnum
+from app.entries.utils import (
+    check_availability_by_date_end,
+    check_availability_by_date_start_after_date_now,
+    check_availability_by_date_start_before_date_now,
+)
 
 
 class EntriesDAO(BaseDao):
@@ -17,15 +22,9 @@ class EntriesDAO(BaseDao):
     @classmethod
     async def add(cls, user_id: int, date_start: date, date_end: date, text: str):
         async with async_session_maker() as session:
-            if (
-                datetime.now(pytz.timezone("Europe/Moscow")).date()
-                < datetime.strptime(str(date_start), "%Y-%m-%d").date()
-            ):
+            if check_availability_by_date_start_after_date_now(date_start):
                 status = "WAITING"
-            elif (
-                datetime.now(pytz.timezone("Europe/Moscow")).date()
-                >= datetime.strptime(str(date_start), "%Y-%m-%d").date()
-            ):
+            elif check_availability_by_date_start_before_date_now(date_start):
                 status = "WORK"
 
             entry = (
@@ -49,15 +48,9 @@ class EntriesDAO(BaseDao):
     async def update(cls, entry_id: int, date_start: date, date_end: date, text: str):
         async with async_session_maker() as session:
 
-            if (
-                datetime.now(pytz.timezone("Europe/Moscow")).date()
-                < datetime.strptime(str(date_start), "%Y-%m-%d").date()
-            ):
+            if check_availability_by_date_start_after_date_now(date_start):
                 status = "WAITING"
-            elif (
-                datetime.now(pytz.timezone("Europe/Moscow")).date()
-                >= datetime.strptime(str(date_start), "%Y-%m-%d").date()
-            ):
+            elif check_availability_by_date_start_before_date_now(date_start):
                 status = "WORK"
 
             update_entry = (
@@ -80,26 +73,17 @@ class EntriesDAO(BaseDao):
     @classmethod
     async def global_update_statuses(cls):
         async with async_session_maker() as session:
-            all_entries_with_work_or_waiting_statuses = select(Entries).where(
-                or_(
-                    Entries.status == StatusEnum.WAITING,
-                    Entries.status == StatusEnum.WORK,
-                    Entries.status == StatusEnum.EXPIRED,
-                )
-            )
+            all_entries = select(Entries)
 
-            all_entries_with_work_or_waiting_statuses = await session.execute(
-                all_entries_with_work_or_waiting_statuses
-            )
-            all_entries_with_work_or_waiting_statuses = (
-                all_entries_with_work_or_waiting_statuses.scalars().all()
-            )
+            all_entries = await session.execute(all_entries)
+            all_entries = all_entries.scalars().all()
 
-            for entry in all_entries_with_work_or_waiting_statuses:
+            for entry in all_entries:
                 if (
                     entry.status == StatusEnum.WAITING
-                    and datetime.strptime(str(entry.date_start), "%Y-%m-%d").date()
-                    <= datetime.now(pytz.timezone("Europe/Moscow")).date()
+                    and check_availability_by_date_start_before_date_now(
+                        entry.date_start
+                    )
                 ):
                     update_entry = (
                         update(Entries)
@@ -109,10 +93,8 @@ class EntriesDAO(BaseDao):
 
                     await session.execute(update_entry)
 
-                if (
-                    entry.status == StatusEnum.WORK
-                    and datetime.strptime(str(entry.date_end), "%Y-%m-%d").date()
-                    <= datetime.now(pytz.timezone("Europe/Moscow")).date()
+                if entry.status == StatusEnum.WORK and check_availability_by_date_end(
+                    entry.date_end
                 ):
                     update_entry = (
                         update(Entries)
@@ -123,7 +105,7 @@ class EntriesDAO(BaseDao):
                     await session.execute(update_entry)
 
                 if (
-                    entry.status == StatusEnum.EXPIRED
+                    entry.status in (StatusEnum.EXPIRED, StatusEnum.READY)
                     and (
                         datetime.now(pytz.timezone("Europe/Moscow")).date()
                         - datetime.strptime(str(entry.date_end), "%Y-%m-%d").date()

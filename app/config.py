@@ -16,12 +16,6 @@ class Settings(BaseSettings):
     DB_PASS: str
     DB_NAME: str
 
-    TEST_DB_HOST: str
-    TEST_DB_PORT: int
-    TEST_DB_USER: str
-    TEST_DB_PASS: str
-    TEST_DB_NAME: str
-
     RABBIT_USER: str
     RABBIT_PASS: str
     RABBIT_HOST: str

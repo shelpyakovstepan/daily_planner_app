@@ -1,7 +1,7 @@
 [flake8]
 inline-quotes = "
 max-line-length = 88
-max-doc-length = 79
+max-doc-length = 88
 suppress-none-returning = True
 docstring-convention = google
 ignore = ANN002, ANN003, ANN101, D104, ANN204, F541, W503

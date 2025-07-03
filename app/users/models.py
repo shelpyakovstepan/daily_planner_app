@@ -1,5 +1,5 @@
 # THIRDPARTY
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
 
 # FIRSTPARTY
 from app.database import Base
@@ -8,7 +8,6 @@ from app.database import Base
 class Users(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
-    email = Column(String, unique=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
-    is_admin = Column(Boolean, nullable=False, default=False)
+    email: Mapped[str] = mapped_column(unique=True, nullable=False)
+    hashed_password: Mapped[str] = mapped_column(nullable=False)
+    is_admin: Mapped[bool] = mapped_column(nullable=False, default=False)

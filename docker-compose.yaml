@@ -2,13 +2,13 @@ services:
   db:
     image: postgres:17
     container_name: daily_planner_db
+    env_file:
+      - .env-non-dev
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 3
-    env_file:
-      - .env-non-dev
     ports:
       - 5432:5432
     volumes:
@@ -17,14 +17,14 @@ services:
   rabbitmq:
     image: rabbitmq:4.1.1-management
     container_name: daily_planner_rabbitmq
+    env_file:
+      - .env-non-dev
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 30s
       timeout: 30s
       retries: 3
     hostname: rabbitmq
-    env_file:
-      - .env-non-dev
     ports:
       - 5672:5672
       - 15672:15672
@@ -34,9 +34,9 @@ services:
     build:
       context: .
     container_name: daily_planner_app
-    restart: always
     env_file:
       - .env-non-dev
+    restart: always
     depends_on:
       db:
         condition: service_healthy
@@ -51,9 +51,9 @@ services:
     build:
       context: .
     container_name: daily_planner_celery
-    restart: always
     env_file:
       - .env-non-dev
+    restart: always
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -64,9 +64,9 @@ services:
     build:
       context: .
     container_name: daily_planner_flower
-    restart: always
     env_file:
       - .env-non-dev
+    restart: always
     depends_on:
       rabbitmq:
         condition: service_healthy
