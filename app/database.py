@@ -1,5 +1,5 @@
 # THIRDPARTY
-from sqlalchemy import NullPool, text
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
@@ -11,22 +11,13 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from app.config import settings
 from app.logger import logger
 
-if settings.MODE == "TEST":
-    DATABASE_URL = (
-        f"postgresql+asyncpg://{settings.TEST_DB_USER}:"
-        f"{settings.TEST_DB_PASS}@{settings.TEST_DB_HOST}:"
-        f"{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}"
-    )
-    DATABASE_PARAMS = {"poolclass": NullPool}
-else:
-    DATABASE_URL = (
-        f"postgresql+asyncpg://{settings.DB_USER}:"
-        f"{settings.DB_PASS}@{settings.DB_HOST}:"
-        f"{settings.DB_PORT}/{settings.DB_NAME}"
-    )
-    DATABASE_PARAMS = {}
+DATABASE_URL = (
+    f"postgresql+asyncpg://{settings.DB_USER}:"
+    f"{settings.DB_PASS}@{settings.DB_HOST}:"
+    f"{settings.DB_PORT}/{settings.DB_NAME}"
+)
 
-engine = create_async_engine(DATABASE_URL, **DATABASE_PARAMS)
+engine = create_async_engine(DATABASE_URL)
 
 async_session_maker = async_sessionmaker(
     bind=engine, class_=AsyncSession, expire_on_commit=False

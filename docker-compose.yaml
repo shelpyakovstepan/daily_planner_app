@@ -2,6 +2,8 @@ services:
   db:
     image: postgres:17
     container_name: daily_planner_db
+    env_file:
+      - .env-non-dev
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
@@ -15,6 +17,8 @@ services:
   rabbitmq:
     image: rabbitmq:4.1.1-management
     container_name: daily_planner_rabbitmq
+    env_file:
+      - .env-non-dev
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 30s
@@ -30,6 +34,8 @@ services:
     build:
       context: .
     container_name: daily_planner_app
+    env_file:
+      - .env-non-dev
     restart: always
     depends_on:
       db:
@@ -45,6 +51,8 @@ services:
     build:
       context: .
     container_name: daily_planner_celery
+    env_file:
+      - .env-non-dev
     restart: always
     depends_on:
       rabbitmq:
@@ -56,6 +64,8 @@ services:
     build:
       context: .
     container_name: daily_planner_flower
+    env_file:
+      - .env-non-dev
     restart: always
     depends_on:
       rabbitmq:

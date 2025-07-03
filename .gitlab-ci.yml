@@ -6,15 +6,13 @@ stages:
   - cleanup
   - deploy
 
-#before_script:
-#  - echo "$ENV_NON_DEV" > .env-non-dev
-#  - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
-#  - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
-## - powershell -command "Get-Content -Encoding Unicode "$ENV_NON_DEV" | Out-File -Encoding utf8 "$ENV_NON_DEV".utf8"
-## - powershell -command "Move-Item -Force "$ENV_NON_DEV".utf8 "$ENV_NON_DEV""
-##
-#after_script:
-#  - rm -Fo .env-non-dev
+before_script:
+  - echo "$ENV_NON_DEV" > .env-non-dev
+  - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
+  - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
+
+after_script:
+  - rm -Fo .env-non-dev
 
 
 build-job:
