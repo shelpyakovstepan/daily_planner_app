@@ -35,7 +35,7 @@ services:
       context: .
     container_name: daily_planner_app
     env_file:
-      - ENV_NON_DEV
+      - echo "$ENV_NON_DEV" > .env-non-dev
     restart: always
     depends_on:
       db:
