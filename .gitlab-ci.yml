@@ -6,13 +6,13 @@ stages:
   - cleanup
   - deploy
 
-before_script:
-  - echo "$ENV_NON_DEV" > .env-non-dev
-  - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
-  - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
-
-after_script:
-  - rm -Fo .env-non-dev
+#before_script:
+#  - echo "$ENV_NON_DEV" > .env-non-dev
+#  - powershell -command "Get-Content -Encoding Unicode .env-non-dev | Out-File -Encoding utf8 .env-non-dev.utf8"
+#  - powershell -command "Move-Item -Force .env-non-dev.utf8 .env-non-dev"
+#
+#after_script:
+#  - rm -Fo .env-non-dev
 
 
 build-job:
@@ -24,12 +24,16 @@ build-job:
 
 run-job:
   stage: run
+  environment:
+    name: dev
   needs: [build-job]
   script:
     - docker compose -f docker-compose.yaml up -d
 
 lint-test-job:
   stage: lint
+  environment:
+    name: dev
   needs: [run-job]
   script:
     - echo "Проверка форматирования кода с помощью black..."
@@ -46,6 +50,8 @@ lint-test-job:
 
 test-job:
   stage: test
+  environment:
+    name: dev
   needs: [lint-test-job]
   script:
     - echo "Начало тестирования"
@@ -54,6 +60,8 @@ test-job:
 
 cleanup-job:
   stage: cleanup
+  environment:
+    name: dev
   needs: [run-job, test-job]
   script:
     - docker compose -f docker-compose.yaml down
@@ -65,6 +73,8 @@ cleanup-job:
 
 deploy-job:
   stage: deploy
+  environment:
+    name: dev
   needs: [test-job]
   script:
     - docker compose -f docker-compose.yaml build
