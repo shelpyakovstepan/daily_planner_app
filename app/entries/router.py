@@ -1,9 +1,10 @@
 # STDLIB
-from datetime import date
-from typing import List, Literal
+from datetime import date, datetime
+from typing import List, Literal, Optional
 
 # THIRDPARTY
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
+import pytz
 
 # FIRSTPARTY
 from app.entries.dao import EntriesDAO
@@ -28,9 +29,11 @@ router = APIRouter(prefix="/entries", tags=["Записи"])
 
 @router.post("/")
 async def add_entry(
-    date_start: date,
     date_end: date,
     text: str,
+    date_start: Optional[date] = Query(
+        datetime.now(pytz.timezone("Europe/Moscow")).date()
+    ),
     user: Users = Depends(get_current_user),
 ) -> SEntries:
     """Создаёт новую запись."""
