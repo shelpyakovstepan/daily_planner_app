@@ -8,7 +8,8 @@ class TestUsersApi:
         "email,password,status_code",
         [
             ("user@example.com", "parol", 409),
-            ("test@test.com", "fff", 409),
+            ("test@test.com", "ffffff", 409),
+            ("test@test.com", "f", 422),
             ("abcde", "kotopes", 422),
         ],
     )
@@ -24,7 +25,8 @@ class TestUsersApi:
         [
             ("test@test.com", "kolobok", 200),
             ("user@example.com", "parol", 200),
-            ("test@test.com", "fff", 401),
+            ("test@test.com", "ffffff", 401),
+            ("test@test.com", "f", 422),
             ("abcde", "kotopes", 422),
             ("test@t.com", "kolobok", 401),
         ],
