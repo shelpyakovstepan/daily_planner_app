@@ -47,7 +47,6 @@ class EntriesDAO(BaseDao):
     @classmethod
     async def update(cls, entry_id: int, date_start: date, date_end: date, text: str):
         async with async_session_maker() as session:
-
             if check_availability_by_date_start_after_date_now(date_start):
                 status = "WAITING"
             elif check_availability_by_date_start_before_date_now(date_start):

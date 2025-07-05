@@ -46,7 +46,10 @@ async def add_entry(
         raise TextIsTooBigException
 
     entry = await EntriesDAO.add(
-        user.id, date_start, date_end, text  # pyright: ignore [reportArgumentType]
+        user.id,
+        date_start,
+        date_end,
+        text,  # pyright: ignore [reportArgumentType]
     )
 
     if not entry:

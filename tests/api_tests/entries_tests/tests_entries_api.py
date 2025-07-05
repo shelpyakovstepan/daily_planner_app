@@ -16,7 +16,6 @@ class TestEntriesApi:
     async def test_add_entry(
         self, date_start, date_end, text, status_code, authenticated_ac: AsyncClient
     ):
-
         response = await authenticated_ac.post(
             "/entries/",
             params={"date_start": date_start, "date_end": date_end, "text": text},
@@ -58,7 +57,7 @@ class TestEntriesApi:
         self, authenticated_ac: AsyncClient, status, entries_number, status_code
     ):
         response = await authenticated_ac.get(
-            f"/entries/status", params={"status": status}
+            "/entries/status", params={"status": status}
         )
 
         assert response.status_code == status_code
@@ -87,7 +86,7 @@ class TestEntriesApi:
         status_code,
     ):
         response = await authenticated_ac.put(
-            f"/entries//",
+            "/entries//",
             params={
                 "entry_id": entry_id,
                 "date_start": date_start,
@@ -114,7 +113,7 @@ class TestEntriesApi:
         self, authenticated_ac: AsyncClient, entry_id, status, status_code
     ):
         response = await authenticated_ac.patch(
-            f"/entries///", params={"entry_id": entry_id, "status": status}
+            "/entries///", params={"entry_id": entry_id, "status": status}
         )
 
         assert response.status_code == status_code
