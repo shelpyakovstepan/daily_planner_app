@@ -20,8 +20,8 @@ services:
     #env_file:
     #  - .env-non-dev
     environment:
-      RABBIT_USER: "${RABBIT_USER}"
-      RABBIT_PASS: "${RABBIT_PASS}"
+      #RABBIT_USER: "${RABBIT_USER}"
+      #RABBIT_PASS: "${RABBIT_PASS}"
       RABBIT_HOST: "${RABBIT_HOST}"
       RABBIT_PORT: "${RABBIT_PORT}"
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
