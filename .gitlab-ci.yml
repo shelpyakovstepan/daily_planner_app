@@ -36,18 +36,18 @@ lint-test-job:
     name: dev
   needs: [run-job]
   script:
-    - echo "Проверка форматирования кода с помощью black..."
-    - docker compose exec -it daily_planner black --config .black --check app tests
+    #- echo "Проверка форматирования кода с помощью black..."
+    #- docker compose exec -it daily_planner black --config .black --check app tests
+
+    - echo "Проверка стиля и форматирорвания кода с помощью ruff..."
+    - docker compose exec -it daily_planner ruff check --config ruff.toml app tests
+    - docker compose exec -it daily_planner ruff format --config ruff.toml --check app tests
 
     - echo "Проверка типов с помощью pyright..."
     - docker compose exec -it daily_planner pyright app tests
 
     #- echo "Проверка стиля кода с помощью flake8..."
     #- docker compose exec -it daily_planner flake8 app tests
-
-    - echo "Проверка стиля и форматирорвания кода с помощью ruff..."
-    - docker compose exec -it daily_planner ruff check --config ruff.toml app tests
-    - docker compose exec -it daily_planner ruff format --config ruff.toml --check app tests
 
     - echo "Проверка сортировки импортов с помощью isort..."
     - docker compose exec -it daily_planner isort --check-only --diff app tests
