@@ -20,9 +20,9 @@ services:
     #env_file:
     #  - .env-non-dev
     environment:
-      RABBIT_USER: "${RABBIT_USER}"
-      RABBIT_PASS: "${RABBIT_PASS}"
-      RABBIT_HOST: "${RABBIT_HOST}"
+      #RABBIT_USER: "${RABBIT_USER}"
+      #RABBIT_PASS: "${RABBIT_PASS}"
+      #RABBIT_HOST: "${RABBIT_HOST}"
       #RABBIT_PORT: "${RABBIT_PORT}"
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
@@ -33,8 +33,8 @@ services:
       retries: 3
     hostname: rabbitmq
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
 
   daily_planner:
     image: daily_planner_image:latest
