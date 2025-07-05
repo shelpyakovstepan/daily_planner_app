@@ -15,7 +15,7 @@ def create_registration_email(email_to: EmailStr):
     email["To"] = email_to
 
     email.set_content(
-    """
+        """
             <h1> Регистрация прошла успешно </h1>
              Вы зарегистрировались в приложении-ежедневнике
         """,
