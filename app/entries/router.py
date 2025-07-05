@@ -47,7 +47,7 @@ async def add_entry(
 
     entry = await EntriesDAO.add(
         user.id,
-        date_start,
+        date_start,  # pyright: ignore [reportArgumentType]
         date_end,
         text,  # pyright: ignore [reportArgumentType]
     )
