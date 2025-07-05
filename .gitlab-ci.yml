@@ -46,7 +46,7 @@ lint-test-job:
     #- docker compose exec -it daily_planner flake8 app tests
 
     - echo "Проверка стиля и форматирорвания кода с помощью ruff..."
-    - docker compose exec -it daily_planner ruff check --config ruff.toml --check app tests
+    - docker compose exec -it daily_planner ruff check --config ruff.toml app tests
     - docker compose exec -it daily_planner ruff format --config ruff.toml --check app tests
 
     - echo "Проверка сортировки импортов с помощью isort..."
