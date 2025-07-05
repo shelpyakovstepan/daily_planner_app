@@ -14,7 +14,6 @@ before_script:
 after_script:
   - rm -Fo .env-non-dev
 
-
 build-job:
   stage: build
   environment:
@@ -47,7 +46,7 @@ lint-test-job:
 
     #- echo "Проверка стиля кода с помощью flake8..."
     #- docker compose exec -it daily_planner flake8 app tests
-    -
+
     - echo "Проверка стиля кода с помощью ruff..."
     - docker compose exec -it daily_planner ruff check --config ruff.toml app tests
 
