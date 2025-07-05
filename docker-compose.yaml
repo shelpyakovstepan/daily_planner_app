@@ -19,9 +19,9 @@ services:
     container_name: daily_planner_rabbitmq
     #env_file:
     #  - .env-non-dev
-    environment:
-      RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
-      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
+    #environment:
+    #  RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
+    #  RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 30s
