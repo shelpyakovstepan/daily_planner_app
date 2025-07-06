@@ -2,8 +2,12 @@ services:
   db:
     image: postgres:17
     container_name: daily_planner_db
-    env_file:
-      - .env-non-dev
+    #env_file:
+    #  - .env-non-dev
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
@@ -20,10 +24,6 @@ services:
     #env_file:
     #  - .env-non-dev
     environment:
-      #RABBIT_USER: "${RABBIT_USER}"
-      #RABBIT_PASS: "${RABBIT_PASS}"
-      #RABBIT_HOST: "${RABBIT_HOST}"
-      #RABBIT_PORT: "${RABBIT_PORT}"
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
     healthcheck:
