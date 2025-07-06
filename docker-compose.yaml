@@ -12,7 +12,7 @@ services:
       timeout: 5s
       retries: 3
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - fastapi_postgres_data:/var/lib/postgresql/data
 
@@ -66,7 +66,7 @@ services:
         condition: service_healthy
     command: [ "bash", "/daily_planner/docker/app.sh" ]
     ports:
-      - 7777:8000
+      - "7777:8000"
 
   celery:
     image: daily_planner_celery_image
@@ -132,7 +132,7 @@ services:
         condition: service_healthy
     command: [ "bash", "/daily_planner/docker/celery.sh", "flower" ]
     ports:
-      - 5555:5555
+      - "5555:5555"
 
   promtail:
     image: grafana/promtail:latest
@@ -162,7 +162,7 @@ services:
       - prometheusdata:/prometheus
     restart: unless-stopped
     ports:
-      - 9090:9090
+      - "9090:9090"
 
   grafana:
     image: grafana/grafana:9.4.7
@@ -172,7 +172,7 @@ services:
       - grafanadata:/var/lib/grafana
     restart: unless-stopped
     ports:
-      - 3001:3000
+      - "3001:3000"
 
 volumes:
   fastapi_postgres_data:
