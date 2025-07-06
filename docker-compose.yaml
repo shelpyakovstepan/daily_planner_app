@@ -41,8 +41,29 @@ services:
     build:
       context: .
     container_name: daily_planner_app
-    env_file:
-      - .env-non-dev
+    #env_file:
+    #  - .env-non-dev
+    environment:
+      MODE: "${MODE}"
+
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      DB_USER: "${POSTGRES_USER}"
+      DB_PASS: "${POSTGRES_PASSWORD}"
+      DB_NAME: "${POSTGRES_DB}"
+
+      RABBIT_USER: "${RABBITMQ_DEFAULT_USER}"
+      RABBIT_PASS: "${RABBITMQ_DEFAULT_PASS}"
+      RABBIT_HOST: "${RABBIT_HOST}"
+      RABBIT_PORT: "${RABBIT_PORT}"
+
+      SMTP_HOST: "${SMTP_HOST}"
+      SMTP_PORT: "${SMTP_PORT}"
+      SMTP_USER: "${SMTP_USER}"
+      SMTP_PASS: "${SMTP_PASS}"
+
+      SECRET_KEY: "${SECRET_KEY}"
+      ALGORITHM: "${ALGORITHM}"
     restart: always
     depends_on:
       db:
@@ -58,8 +79,8 @@ services:
     build:
       context: .
     container_name: daily_planner_celery
-    env_file:
-      - .env-non-dev
+    #env_file:
+    #  - .env-non-dev
     restart: always
     depends_on:
       rabbitmq:
@@ -71,8 +92,8 @@ services:
     build:
       context: .
     container_name: daily_planner_flower
-    env_file:
-      - .env-non-dev
+    #env_file:
+    #  - .env-non-dev
     restart: always
     depends_on:
       rabbitmq:
