@@ -84,7 +84,8 @@ async def create_users(
 
 @pytest.fixture(scope="function", autouse=True)
 async def create_entries(
-    get_session: AsyncSession, create_users: List[Users]  # noqa: F811
+    get_session: AsyncSession,
+    create_users: List[Users],  # noqa: F811
 ) -> AsyncGenerator[List[Entries], None]:
     """Фикстура для создания тестовой активности в БД.
 

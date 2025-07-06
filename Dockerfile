@@ -14,7 +14,7 @@ RUN poetry config virtualenvs.create false && \
 COPY . .
 
 RUN apt-get update && apt-get install -y dos2unix && \
-    dos2unix /daily_planner/docker/celery.sh && \
+    dos2unix /daily_planner/docker/*.sh && \
     chmod a+x /daily_planner/docker/*.sh
 
 CMD ["poetry", "run", "gunicorn", "app.main:app", "--workers", "1", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind=0.0.0.0:8000"]
